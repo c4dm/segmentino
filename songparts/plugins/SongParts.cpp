@@ -1073,15 +1073,16 @@ SongPartitioner::FeatureList SongPartitioner::ChromaFeatures()
 
 /* ------ Beat Quantizer ------ */
 
-std::vector<Vamp::Plugin::FeatureList> SongPartitioner::BeatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugin::FeatureList beats)
+std::vector<Vamp::Plugin::FeatureList>
+SongPartitioner::BeatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugin::FeatureList beats)
 {
     std::vector<FeatureList> returnVector;
     
     FeatureList fwQchromagram; // frame-wise beat-quantised chroma
     FeatureList bwQchromagram; // beat-wise beat-quantised chroma
     
-    size_t nChromaFrame = chromagram.size();
-    size_t nBeat = beats.size();
+    int nChromaFrame = (int) chromagram.size();
+    int nBeat = (int) beats.size();
     
     if (nBeat == 0 && nChromaFrame == 0) return returnVector;
     
@@ -1093,15 +1094,23 @@ std::vector<Vamp::Plugin::FeatureList> SongPartitioner::BeatQuantiser(Vamp::Plug
     int currBeatCount = -1; // start before first beat
     int framesInBeat = 0;
     
-    for (size_t iChroma = 0; iChroma < nChromaFrame; ++iChroma)
+    for (int iChroma = 0; iChroma < nChromaFrame; ++iChroma)
     {
-        Vamp::RealTime chromaTimestamp = chromagram[iChroma].timestamp;
-        if (chromaTimestamp > beats[currBeatCount+1].timestamp ||
+        Vamp::RealTime frameTimestamp = chromagram[iChroma].timestamp;
+		Vamp::RealTime tempBeatTimestamp;
+		
+		if (currBeatCount != beats.size()-1) tempBeatTimestamp = beats[currBeatCount+1].timestamp;
+		else tempBeatTimestamp = chromagram[nChromaFrame-1].timestamp;
+		
+        if (frameTimestamp > tempBeatTimestamp ||
             iChroma == nChromaFrame-1)
         {
             // new beat (or last chroma frame)
             // 1. finish all the old beat processing
-            for (size_t i = 0; i < nBin; ++i) tempChroma[i] /= framesInBeat; // average
+			if (framesInBeat > 0)
+			{
+            	for (int i = 0; i < nBin; ++i) tempChroma[i] /= framesInBeat; // average
+			}
             
             Feature bwQchromaFrame;
             bwQchromaFrame.hasTimestamp = true;
@@ -1131,8 +1140,6 @@ std::vector<Vamp::Plugin::FeatureList> SongPartitioner::BeatQuantiser(Vamp::Plug
     returnVector.push_back(fwQchromagram);
     returnVector.push_back(bwQchromagram);
 }
-
-
 
 /* -------------------------------- */
 /* ------ Support Functions  ------ */
@@ -1330,12 +1337,6 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quatisedChromagram)
     // Collect Info
     int nBeat = quatisedChromagram.size();                      // Number of feature vector
     int nFeatValues = quatisedChromagram[0].values.size();      // Number of values for each feature vector
-    
-    // ----- TEMP ------
-    /*if (nBeat > 255)
-        nBeat = 255;
-    std::cout << "CUT THE ERROR BEAT -> " << nBeat << std::endl;*/
-    // -----------------
     
     arma::irowvec timeStamp = arma::zeros<arma::imat>(1,nBeat);       // Vector of Time Stamps
     
