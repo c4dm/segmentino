@@ -1243,23 +1243,22 @@ Part nullpart(vector<Part> parts, arma::vec barline)
     arma::uvec nullindices = arma::ones<arma::uvec>(barline.size());
     for (unsigned iPart=0; iPart<parts.size(); ++iPart)
     {
-        for (unsigned iIndex=0; iIndex<parts[0].indices.size(); ++iIndex) 
-        {
+        //for (unsigned iIndex=0; iIndex < parts[0].indices.size(); ++iIndex) 
+        for (unsigned iIndex=0; iIndex < parts[iPart].indices.size(); ++iIndex) 
             for (unsigned i=0; i<parts[iPart].n; ++i) 
             {
                 unsigned ind = parts[iPart].indices[iIndex]+i;
                 nullindices(ind) = 0;
             }
-        }
     }
-    
+
     Part newPart;
     newPart.n = 1;
     uvec q = find(nullindices > 0);
     
     for (unsigned i=0; i<q.size();++i) 
         newPart.indices.push_back(q(i));
-        
+
     newPart.letter = '-';
     newPart.value = 0;
     newPart.level = 0;
@@ -1568,8 +1567,6 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quatisedChromagram)
             uword maIdx;
             ma = t1.max(maIdx);
             
-            std::cout << maIdx << " - " << ma << std::endl;
-            
             if ((maIdx == 0)&&(ma == 0))
                 break;
 
@@ -1642,6 +1639,7 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quatisedChromagram)
    
     arma::vec bar = linspace(1,nBeat,nBeat);    
     Part np = nullpart(parts,bar);
+    
     parts.push_back(np);
     
     // -------------- NOT CONVERTED -------------------------------------  
@@ -1782,8 +1780,8 @@ Vamp::Plugin::FeatureList SongPartitioner::Segmenter(Vamp::Plugin::FeatureList q
     vector<Part> finalParts;
     
     parts = songSegment(quatisedChromagram);
-        
     songSegmentChroma(quatisedChromagram,parts);
+    
     finalParts = songSegmentIntegration(parts);
     
     
