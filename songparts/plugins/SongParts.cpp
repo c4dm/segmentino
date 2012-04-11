@@ -1555,9 +1555,8 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quatisedChromagram)
             if (i!=1)
                 bestval2 = join_rows(bestval2,bestval.col(i));
         
-        for (unsigned kSeg=0; kSeg<1; ++kSeg)
+        for (unsigned kSeg=0; kSeg<7; ++kSeg)
         {
-            
             arma::mat currbestvals = arma::zeros<arma::mat>(bestval2.n_rows, bestval2.n_cols);
             for (unsigned i=0; i<bestval2.n_rows; ++i)
                 for (unsigned j=0; j<bestval2.n_cols; ++j)
