@@ -340,7 +340,7 @@ public:
                         countNonzero++;
                     }
                     kernelFftIndex.push_back(iFFT);
-                    kernelNoteIndex.push_back(iNote);                                
+                    kernelNoteIndex.push_back(iNote);
                 }
             }
         }
@@ -1099,26 +1099,26 @@ SongPartitioner::beatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugi
     for (int iChroma = 0; iChroma < nChromaFrame; ++iChroma)
     {
         Vamp::RealTime frameTimestamp = chromagram[iChroma].timestamp;
-                Vamp::RealTime tempBeatTimestamp;
+        Vamp::RealTime tempBeatTimestamp;
                 
-                if (currBeatCount != beats.size()-1) tempBeatTimestamp = beats[currBeatCount+1].timestamp;
-                else tempBeatTimestamp = chromagram[nChromaFrame-1].timestamp;
+        if (currBeatCount != beats.size()-1) tempBeatTimestamp = beats[currBeatCount+1].timestamp;
+        else tempBeatTimestamp = chromagram[nChromaFrame-1].timestamp;
                 
         if (frameTimestamp > tempBeatTimestamp ||
             iChroma == nChromaFrame-1)
         {
             // new beat (or last chroma frame)
             // 1. finish all the old beat processing
-                        if (framesInBeat > 0)
-                        {
-                    for (int i = 0; i < nBin; ++i) tempChroma[i] /= framesInBeat; // average
-                        }
+            if (framesInBeat > 0)
+            {
+                for (int i = 0; i < nBin; ++i) tempChroma[i] /= framesInBeat; // average
+            }
             
             Feature bwQchromaFrame;
             bwQchromaFrame.hasTimestamp = true;
             bwQchromaFrame.timestamp = beatTimestamp;
             bwQchromaFrame.values = tempChroma;
-            bwQchromaFrame.duration = beats[currBeatCount+1].timestamp - beats[currBeatCount].timestamp;
+            bwQchromaFrame.duration = tempBeatTimestamp - beatTimestamp;
             bwQchromagram.push_back(bwQchromaFrame);
             
             for (int iFrame = -framesInBeat; iFrame < 0; ++iFrame)
@@ -1132,7 +1132,7 @@ SongPartitioner::beatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugi
             
             // 2. increments / resets for current (new) beat
             currBeatCount++;
-            beatTimestamp = beats[currBeatCount].timestamp;
+            beatTimestamp = tempBeatTimestamp;
             for (size_t i = 0; i < nBin; ++i) tempChroma[i] = 0; // average
             framesInBeat = 0;
         }
