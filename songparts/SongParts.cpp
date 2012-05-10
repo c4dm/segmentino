@@ -78,7 +78,7 @@ public:
     /* --- Constructor --- */
 public:
     BeatTrackerData(float rate, const DFConfig &config) : dfConfig(config) {
-	
+        
         df = new DetectionFunction(config);
         // decimation factor aims at resampling to c. 3KHz; must be power of 2
         int factor = MathUtilities::nextPowerOfTwo(rate / 3000);
@@ -88,7 +88,7 @@ public:
     
     /* --- Desctructor --- */
     ~BeatTrackerData() {
-	delete df;
+        delete df;
         delete downBeat;
     }
     
@@ -162,12 +162,12 @@ public:
         tuneLocal(0.0),
         doNormalizeChroma(0),
         rollon(0.0),
-    	s(0.7),
-    	sinvalues(0),
-    	cosvalues(0),
-    	window(HanningWindow, block_size),
-    	fft(block_size),
-    	inputSampleRate(inputSampleRate)
+            s(0.7),
+            sinvalues(0),
+            cosvalues(0),
+            window(HanningWindow, block_size),
+            fft(block_size),
+            inputSampleRate(inputSampleRate)
     {
         // make the *note* dictionary matrix
         dict = new float[nNote * 84];
@@ -196,7 +196,7 @@ public:
     
     void baseProcess(float *inputBuffers, Vamp::RealTime timestamp)
     {   
-        	
+                
         frameCount++;   
         float *magnitude = new float[blockSize/2];
         double *fftReal = new double[blockSize];
@@ -294,16 +294,16 @@ public:
     bool initialise()
     {
         dictionaryMatrix(dict, s);
-	
-    	// make things for tuning estimation
-    	for (int iBPS = 0; iBPS < nBPS; ++iBPS) {
+        
+            // make things for tuning estimation
+            for (int iBPS = 0; iBPS < nBPS; ++iBPS) {
             sinvalues.push_back(sin(2*M_PI*(iBPS*1.0/nBPS)));
             cosvalues.push_back(cos(2*M_PI*(iBPS*1.0/nBPS)));
         }
     
-	
-    	// make hamming window of length 1/2 octave
-    	int hamwinlength = nBPS * 6 + 1;
+        
+            // make hamming window of length 1/2 octave
+            int hamwinlength = nBPS * 6 + 1;
         float hamwinsum = 0;
         for (int i = 0; i < hamwinlength; ++i) { 
             hw.push_back(0.54 - 0.46 * cos((2*M_PI*i)/(hamwinlength-1)));    
@@ -317,7 +317,7 @@ public:
             meanTunings.push_back(0);
             localTunings.push_back(0);
         }
-	
+        
         blockSize = blockSize;
         frameCount = 0;
         int tempn = nNote * blockSize/2;
@@ -340,7 +340,7 @@ public:
                         countNonzero++;
                     }
                     kernelFftIndex.push_back(iFFT);
-                    kernelNoteIndex.push_back(iNote);				
+                    kernelNoteIndex.push_back(iNote);                                
                 }
             }
         }
@@ -465,12 +465,12 @@ size_t SongPartitioner::getPreferredBlockSize() const
 bool SongPartitioner::initialise(size_t channels, size_t stepSize, size_t blockSize)
 {
     if (m_d) {
-	delete m_d;
-	m_d = 0;
+        delete m_d;
+        m_d = 0;
     }
 
     if (channels < getMinChannelCount() ||
-	channels > getMaxChannelCount()) {
+        channels > getMaxChannelCount()) {
         std::cerr << "SongPartitioner::initialise: Unsupported channel count: "
                   << channels << std::endl;
         return false;
@@ -685,10 +685,10 @@ SongPartitioner::OutputList SongPartitioner::getOutputDescriptors() const
 SongPartitioner::FeatureSet SongPartitioner::process(const float *const *inputBuffers,Vamp::RealTime timestamp)
 {
     if (!m_d) {
-	cerr << "ERROR: SongPartitioner::process: "
-	     << "SongPartitioner has not been initialised"
-	     << endl;
-	return FeatureSet();
+        cerr << "ERROR: SongPartitioner::process: "
+             << "SongPartitioner has not been initialised"
+             << endl;
+        return FeatureSet();
     }
 
     const int fl = m_d->dfConfig.frameLength;
@@ -750,10 +750,10 @@ SongPartitioner::FeatureSet SongPartitioner::process(const float *const *inputBu
 SongPartitioner::FeatureSet SongPartitioner::getRemainingFeatures()
 {
     if (!m_d) {
-	cerr << "ERROR: SongPartitioner::getRemainingFeatures: "
-	     << "SongPartitioner has not been initialised"
-	     << endl;
-	return FeatureSet();
+        cerr << "ERROR: SongPartitioner::getRemainingFeatures: "
+             << "SongPartitioner has not been initialised"
+             << endl;
+        return FeatureSet();
     }
 
     FeatureSet masterFeatureset = beatTrack();
@@ -1099,20 +1099,20 @@ SongPartitioner::beatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugi
     for (int iChroma = 0; iChroma < nChromaFrame; ++iChroma)
     {
         Vamp::RealTime frameTimestamp = chromagram[iChroma].timestamp;
-		Vamp::RealTime tempBeatTimestamp;
-		
-		if (currBeatCount != beats.size()-1) tempBeatTimestamp = beats[currBeatCount+1].timestamp;
-		else tempBeatTimestamp = chromagram[nChromaFrame-1].timestamp;
-		
+                Vamp::RealTime tempBeatTimestamp;
+                
+                if (currBeatCount != beats.size()-1) tempBeatTimestamp = beats[currBeatCount+1].timestamp;
+                else tempBeatTimestamp = chromagram[nChromaFrame-1].timestamp;
+                
         if (frameTimestamp > tempBeatTimestamp ||
             iChroma == nChromaFrame-1)
         {
             // new beat (or last chroma frame)
             // 1. finish all the old beat processing
-			if (framesInBeat > 0)
-			{
-            	for (int i = 0; i < nBin; ++i) tempChroma[i] /= framesInBeat; // average
-			}
+                        if (framesInBeat > 0)
+                        {
+                    for (int i = 0; i < nBin; ++i) tempChroma[i] /= framesInBeat; // average
+                        }
             
             Feature bwQchromaFrame;
             bwQchromaFrame.hasTimestamp = true;
@@ -1341,7 +1341,7 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
     
     arma::irowvec timeStamp = arma::zeros<arma::imat>(1,nBeat);       // Vector of Time Stamps
     
-	// Save time stamp as a Vector
+    // Save time stamp as a Vector
     if (quantisedChromagram[0].hasTimestamp)
     {
         for (int i = 0; i < nBeat; ++ i)
