@@ -621,7 +621,7 @@ SongPartitioner::OutputList SongPartitioner::getOutputDescriptors() const
     m_qchromaOutputNumber = outputCounter++;
 
     OutputDescriptor segm;
-    segm.identifier = "segm";
+    segm.identifier = "segmentation";
     segm.name = "Segmentation";
     segm.description = "Segmentation";
     segm.unit = "segment-type";
