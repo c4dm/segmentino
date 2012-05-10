@@ -62,7 +62,7 @@ protected:
     FeatureSet BeatTrack();
     FeatureList ChromaFeatures();
     std::vector<FeatureList> BeatQuantiser(FeatureList chromagram, FeatureList beats);
-    FeatureList Segmenter(FeatureList quatisedChromagram);
+    FeatureList Segmenter(FeatureList quantisedChromagram);
     
     mutable int m_beatOutputNumber;
     mutable int m_barsOutputNumber;
