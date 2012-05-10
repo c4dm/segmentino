@@ -59,9 +59,9 @@ protected:
     static size_t m_chromaStepsizeFactor;
     int m_bpb;
     int m_pluginFrameCount;
-    FeatureSet BeatTrack();
-    FeatureList ChromaFeatures();
-    std::vector<FeatureList> BeatQuantiser(FeatureList chromagram, FeatureList beats);
+    FeatureSet beatTrack();
+    FeatureList chromaFeatures();
+    std::vector<FeatureList> beatQuantiser(FeatureList chromagram, FeatureList beats);
     FeatureList runSegmenter(FeatureList quantisedChromagram);
     
     mutable int m_beatOutputNumber;

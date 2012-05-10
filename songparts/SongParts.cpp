@@ -754,8 +754,8 @@ SongPartitioner::FeatureSet SongPartitioner::getRemainingFeatures()
 	return FeatureSet();
     }
 
-    FeatureSet masterFeatureset = BeatTrack();
-    FeatureList chromaList = ChromaFeatures();
+    FeatureSet masterFeatureset = beatTrack();
+    FeatureList chromaList = chromaFeatures();
     
     for (size_t i = 0; i < chromaList.size(); ++i)
     {
@@ -763,7 +763,7 @@ SongPartitioner::FeatureSet SongPartitioner::getRemainingFeatures()
     }
     
     // quantised and pseudo-quantised (beat-wise) chroma
-    std::vector<FeatureList> quantisedChroma = BeatQuantiser(chromaList, masterFeatureset[m_beatOutputNumber]);
+    std::vector<FeatureList> quantisedChroma = beatQuantiser(chromaList, masterFeatureset[m_beatOutputNumber]);
     
     masterFeatureset[m_qchromafwOutputNumber] = quantisedChroma[0];
     masterFeatureset[m_qchromaOutputNumber] = quantisedChroma[1];
@@ -776,7 +776,7 @@ SongPartitioner::FeatureSet SongPartitioner::getRemainingFeatures()
 
 /* ------ Beat Tracker ------ */
 
-SongPartitioner::FeatureSet SongPartitioner::BeatTrack()
+SongPartitioner::FeatureSet SongPartitioner::beatTrack()
 {
     vector<double> df;
     vector<double> beatPeriod;
@@ -873,7 +873,7 @@ SongPartitioner::FeatureSet SongPartitioner::BeatTrack()
 
 /* ------ Chroma Extractor ------ */
 
-SongPartitioner::FeatureList SongPartitioner::ChromaFeatures()
+SongPartitioner::FeatureList SongPartitioner::chromaFeatures()
 {
         
     FeatureList returnFeatureList;
@@ -1074,7 +1074,7 @@ SongPartitioner::FeatureList SongPartitioner::ChromaFeatures()
 /* ------ Beat Quantizer ------ */
 
 std::vector<Vamp::Plugin::FeatureList>
-SongPartitioner::BeatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugin::FeatureList beats)
+SongPartitioner::beatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugin::FeatureList beats)
 {
     std::vector<FeatureList> returnVector;
     
