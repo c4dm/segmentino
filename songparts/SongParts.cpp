@@ -1340,6 +1340,19 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
     int nBeat = quantisedChromagram.size();                      // Number of feature vector
     int nFeatValues = quantisedChromagram[0].values.size();      // Number of values for each feature vector
     
+    if (nBeat < minlength) {
+        // return a single part
+        vector<Part> parts;
+        Part newPart;
+        newPart.n = 1;
+        newPart.indices.push_back(0);
+        newPart.letter = "n1";
+        newPart.value = 20;
+        newPart.level = 0;
+        parts.push_back(newPart);
+        return parts;
+    }
+
     arma::irowvec timeStamp = arma::zeros<arma::imat>(1,nBeat);       // Vector of Time Stamps
     
     // Save time stamp as a Vector
