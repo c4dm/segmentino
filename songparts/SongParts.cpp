@@ -1321,7 +1321,7 @@ void mergenulls(vector<Part> &parts)
 
 /* ------ Segmentation ------ */
 
-vector<Part> songSegment(Vamp::Plugin::FeatureList quatisedChromagram)
+vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
 {
     
     
@@ -1336,16 +1336,16 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quatisedChromagram)
     
     
     // Collect Info
-    int nBeat = quatisedChromagram.size();                      // Number of feature vector
-    int nFeatValues = quatisedChromagram[0].values.size();      // Number of values for each feature vector
+    int nBeat = quantisedChromagram.size();                      // Number of feature vector
+    int nFeatValues = quantisedChromagram[0].values.size();      // Number of values for each feature vector
     
     arma::irowvec timeStamp = arma::zeros<arma::imat>(1,nBeat);       // Vector of Time Stamps
     
 	// Save time stamp as a Vector
-    if (quatisedChromagram[0].hasTimestamp)
+    if (quantisedChromagram[0].hasTimestamp)
     {
         for (unsigned i = 0; i < nBeat; ++ i)
-            timeStamp[i] = quatisedChromagram[i].timestamp.nsec;
+            timeStamp[i] = quantisedChromagram[i].timestamp.nsec;
     }
     
     
@@ -1355,7 +1355,7 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quatisedChromagram)
     for (unsigned i = 0; i < nBeat; ++ i)
         for (unsigned j = 0; j < nFeatValues/2; ++ j)
         {
-            featVal(i,j) = (quatisedChromagram[i].values[j]+quatisedChromagram[i].values[j+12]) * 0.8;
+            featVal(i,j) = (quantisedChromagram[i].values[j]+quantisedChromagram[i].values[j+12]) * 0.8;
         }
     
     // Set to arbitrary value to feature vectors with low std
@@ -1669,18 +1669,18 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quatisedChromagram)
 
 
 
-void songSegmentChroma(Vamp::Plugin::FeatureList quatisedChromagram, vector<Part> &parts)
+void songSegmentChroma(Vamp::Plugin::FeatureList quantisedChromagram, vector<Part> &parts)
 {
     // Collect Info
-    int nBeat = quatisedChromagram.size();                      // Number of feature vector
-    int nFeatValues = quatisedChromagram[0].values.size();      // Number of values for each feature vector
+    int nBeat = quantisedChromagram.size();                      // Number of feature vector
+    int nFeatValues = quantisedChromagram[0].values.size();      // Number of values for each feature vector
 
     arma::mat synchTreble = arma::zeros<mat>(nBeat,nFeatValues/2);
     
     for (unsigned i = 0; i < nBeat; ++ i)
         for (unsigned j = 0; j < nFeatValues/2; ++ j)
         {
-            synchTreble(i,j) = quatisedChromagram[i].values[j];
+            synchTreble(i,j) = quantisedChromagram[i].values[j];
         }
     
     arma::mat synchBass = arma::zeros<mat>(nBeat,nFeatValues/2);
@@ -1688,13 +1688,13 @@ void songSegmentChroma(Vamp::Plugin::FeatureList quatisedChromagram, vector<Part
     for (unsigned i = 0; i < nBeat; ++ i)
         for (unsigned j = 0; j < nFeatValues/2; ++ j)
         {
-            synchBass(i,j) = quatisedChromagram[i].values[j+12];
+            synchBass(i,j) = quantisedChromagram[i].values[j+12];
         }
 
     // Process
     
-    arma::mat segTreble = arma::zeros<arma::mat>(quatisedChromagram.size(),quatisedChromagram[0].values.size()/2);
-    arma::mat segBass = arma::zeros<arma::mat>(quatisedChromagram.size(),quatisedChromagram[0].values.size()/2);
+    arma::mat segTreble = arma::zeros<arma::mat>(quantisedChromagram.size(),quantisedChromagram[0].values.size()/2);
+    arma::mat segBass = arma::zeros<arma::mat>(quantisedChromagram.size(),quantisedChromagram[0].values.size()/2);
     
     for (unsigned iPart=0; iPart<parts.size(); ++iPart)
     {
@@ -1772,17 +1772,17 @@ vector<Part> songSegmentIntegration(vector<Part> &parts)
 }
 
 // Segmenter
-Vamp::Plugin::FeatureList SongPartitioner::runSegmenter(Vamp::Plugin::FeatureList quatisedChromagram)
+Vamp::Plugin::FeatureList SongPartitioner::runSegmenter(Vamp::Plugin::FeatureList quantisedChromagram)
 {
     /* --- Display Information --- */
-    int numBeat = quatisedChromagram.size();
-    int numFeats = quatisedChromagram[0].values.size();
+    int numBeat = quantisedChromagram.size();
+    int numFeats = quantisedChromagram[0].values.size();
 
     vector<Part> parts;
     vector<Part> finalParts;
     
-    parts = songSegment(quatisedChromagram);
-    songSegmentChroma(quatisedChromagram,parts);
+    parts = songSegment(quantisedChromagram);
+    songSegmentChroma(quantisedChromagram,parts);
     
     finalParts = songSegmentIntegration(parts);
     
@@ -1825,9 +1825,9 @@ Vamp::Plugin::FeatureList SongPartitioner::runSegmenter(Vamp::Plugin::FeatureLis
         int ind = finalParts[iPart].indices[iInstance];
         int ind1 = finalParts[iPart+1].indices[iInstance];
          
-        seg.timestamp = quatisedChromagram[ind].timestamp;
+        seg.timestamp = quantisedChromagram[ind].timestamp;
         seg.hasDuration = true;
-        seg.duration = quatisedChromagram[ind1].timestamp-quatisedChromagram[ind].timestamp;
+        seg.duration = quantisedChromagram[ind1].timestamp-quantisedChromagram[ind].timestamp;
         seg.values.clear();
         seg.values.push_back(finalParts[iPart].value);
         seg.label = finalParts[iPart].letter;
@@ -1836,9 +1836,9 @@ Vamp::Plugin::FeatureList SongPartitioner::runSegmenter(Vamp::Plugin::FeatureLis
     }
     
     int ind = finalParts[finalParts.size()-1].indices[0];
-    seg.timestamp = quatisedChromagram[ind].timestamp;
+    seg.timestamp = quantisedChromagram[ind].timestamp;
     seg.hasDuration = true;
-    seg.duration = quatisedChromagram[quatisedChromagram.size()-1].timestamp-quatisedChromagram[ind].timestamp;
+    seg.duration = quantisedChromagram[quantisedChromagram.size()-1].timestamp-quantisedChromagram[ind].timestamp;
     seg.values.clear();
     seg.values.push_back(finalParts[finalParts.size()-1].value);
     seg.label = finalParts[finalParts.size()-1].letter;
