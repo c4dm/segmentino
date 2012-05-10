@@ -1099,12 +1099,12 @@ SongPartitioner::beatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugi
     for (int iChroma = 0; iChroma < nChromaFrame; ++iChroma)
     {
         Vamp::RealTime frameTimestamp = chromagram[iChroma].timestamp;
-        Vamp::RealTime tempBeatTimestamp;
+        Vamp::RealTime newBeatTimestamp;
                 
-        if (currBeatCount != beats.size()-1) tempBeatTimestamp = beats[currBeatCount+1].timestamp;
-        else tempBeatTimestamp = chromagram[nChromaFrame-1].timestamp;
+        if (currBeatCount != beats.size()-1) newBeatTimestamp = beats[currBeatCount+1].timestamp;
+        else newBeatTimestamp = chromagram[nChromaFrame-1].timestamp;
                 
-        if (frameTimestamp > tempBeatTimestamp ||
+        if (frameTimestamp > newBeatTimestamp ||
             iChroma == nChromaFrame-1)
         {
             // new beat (or last chroma frame)
@@ -1118,7 +1118,7 @@ SongPartitioner::beatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugi
             bwQchromaFrame.hasTimestamp = true;
             bwQchromaFrame.timestamp = beatTimestamp;
             bwQchromaFrame.values = tempChroma;
-            bwQchromaFrame.duration = tempBeatTimestamp - beatTimestamp;
+            bwQchromaFrame.duration = newBeatTimestamp - beatTimestamp;
             bwQchromagram.push_back(bwQchromaFrame);
             
             for (int iFrame = -framesInBeat; iFrame < 0; ++iFrame)
@@ -1132,7 +1132,7 @@ SongPartitioner::beatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugi
             
             // 2. increments / resets for current (new) beat
             currBeatCount++;
-            beatTimestamp = tempBeatTimestamp;
+            beatTimestamp = newBeatTimestamp;
             for (size_t i = 0; i < nBin; ++i) tempChroma[i] = 0; // average
             framesInBeat = 0;
         }
