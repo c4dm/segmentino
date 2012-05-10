@@ -769,7 +769,7 @@ SongPartitioner::FeatureSet SongPartitioner::getRemainingFeatures()
     masterFeatureset[m_qchromaOutputNumber] = quantisedChroma[1];
     
     // Segmentation
-    masterFeatureset[m_segmOutputNumber] = Segmenter(quantisedChroma[1]);
+    masterFeatureset[m_segmOutputNumber] = runSegmenter(quantisedChroma[1]);
     
     return(masterFeatureset);
 }
@@ -1770,7 +1770,7 @@ vector<Part> songSegmentIntegration(vector<Part> &parts)
 }
 
 // Segmenter
-Vamp::Plugin::FeatureList SongPartitioner::Segmenter(Vamp::Plugin::FeatureList quantisedChromagram)
+Vamp::Plugin::FeatureList SongPartitioner::runSegmenter(Vamp::Plugin::FeatureList quantisedChromagram)
 {
     /* --- Display Information --- */
     int numBeat = quantisedChromagram.size();
