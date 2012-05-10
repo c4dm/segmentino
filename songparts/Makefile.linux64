@@ -4,7 +4,7 @@ CFLAGS := -g -fPIC -I../armadillo-2.4.4/include -I../../vamp-plugin-sdk -I../../
 
 CXXFLAGS  := $(CFLAGS)
 
-LDFLAGS	  := -shared -Wl,-Bstatic -L../../qm-dsp -lqm-dsp -lvamp-sdk -Wl,-Bdynamic 
+LDFLAGS	  := -shared -Wl,-Bstatic -L../../qm-dsp -lqm-dsp -lvamp-sdk -Lbuild/linux/amd64 -llapack -lcblas -lf77blas -latlas -Wl,-Bdynamic 
 
 PLUGIN_EXT   := .so
 

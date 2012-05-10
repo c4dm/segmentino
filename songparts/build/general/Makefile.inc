@@ -12,6 +12,7 @@ HEADERS := SongParts.h
 
 SOURCES := SongParts.cpp \
            libmain.cpp \
+	   g2cstubs.c \
            ../../nnls-chroma/chromamethods.cpp \
            ../../nnls-chroma/nnls.c
 
