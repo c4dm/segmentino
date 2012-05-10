@@ -618,6 +618,7 @@ SongPartitioner::OutputList SongPartitioner::getOutputDescriptors() const
     qchroma.isQuantized = false;
     qchroma.sampleType = OutputDescriptor::FixedSampleRate;
     qchroma.hasDuration = true;
+    qchroma.sampleRate = m_inputSampleRate/2048;
     m_qchromaOutputNumber = outputCounter++;
 
     OutputDescriptor segm;
@@ -634,6 +635,7 @@ SongPartitioner::OutputList SongPartitioner::getOutputDescriptors() const
     segm.isQuantized = true;
     segm.quantizeStep = 1;
     segm.sampleType = OutputDescriptor::VariableSampleRate;
+    segm.sampleRate = 1.0 / m_stepSecs;
     segm.hasDuration = true;
     m_segmOutputNumber = outputCounter++;
     
