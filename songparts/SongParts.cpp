@@ -1586,7 +1586,7 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
             if ((maIdx == 0)&&(ma == 0))
                 break;
 
-            double bestLength = partlengths(currbestvals(maIdx,1));
+            int bestLength = lrint(partlengths(currbestvals(maIdx,1)));
             arma::rowvec bestIndices = decisionArray2.slice(currbestvals(maIdx,1))(currbestvals(maIdx,2),span::all);
                 
             arma::rowvec bestIndicesMap = arma::zeros<arma::rowvec>(bestIndices.size());
