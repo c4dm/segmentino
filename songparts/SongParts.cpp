@@ -767,6 +767,8 @@ SongPartitioner::FeatureSet SongPartitioner::getRemainingFeatures()
     
     // quantised and pseudo-quantised (beat-wise) chroma
     std::vector<FeatureList> quantisedChroma = beatQuantiser(chromaList, masterFeatureset[m_beatOutputNumber]);
+
+    if (quantisedChroma.empty()) return masterFeatureset;
     
     masterFeatureset[m_qchromafwOutputNumber] = quantisedChroma[0];
     masterFeatureset[m_qchromaOutputNumber] = quantisedChroma[1];
