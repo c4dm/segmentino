@@ -1142,6 +1142,7 @@ SongPartitioner::beatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugi
     }
     returnVector.push_back(fwQchromagram);
     returnVector.push_back(bwQchromagram);
+    return returnVector;
 }
 
 /* -------------------------------- */
