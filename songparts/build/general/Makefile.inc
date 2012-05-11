@@ -1,6 +1,6 @@
 
 PLUGIN_EXT	?= .so
-PLUGIN	?= qm-vamp-plugins$(PLUGIN_EXT)
+PLUGIN	?= songpartitioner$(PLUGIN_EXT)
 CXX	?= g++
 CC	?= gcc
 
