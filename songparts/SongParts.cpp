@@ -1452,6 +1452,8 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
     {
         int len = partlengths(iLength);
         int nUsedBeat = nBeat - len + 1;                   // number of potential rep beginnings: they can't overlap at the end of the song
+
+        if (nUsedBeat < 1) continue;
         
         for (int iBeat = 0; iBeat < nUsedBeat; ++ iBeat)   // looping over all columns (arbitrarily chosen columns)
         {
@@ -1649,7 +1651,7 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
     {
         Part newPart;
         newPart.n = nBeat;
-        newPart.indices.push_back(1);
+        newPart.indices.push_back(0);
         newPart.letter = 'A';
         newPart.value = 1;
         newPart.level = 1;
