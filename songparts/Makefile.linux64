@@ -1,6 +1,6 @@
 
 #CFLAGS := -O3 -fPIC -ftree-vectorize -I../armadillo-2.4.4/include -I../../vamp-plugin-sdk -I../../qm-dsp
-CFLAGS := -g -fPIC -I../armadillo-2.4.4/include -I../../vamp-plugin-sdk -I../../qm-dsp
+CFLAGS := -Wall -g -fPIC -I../armadillo-2.4.4/include -I../../vamp-plugin-sdk -I../../qm-dsp
 
 CXXFLAGS  := $(CFLAGS)
 
