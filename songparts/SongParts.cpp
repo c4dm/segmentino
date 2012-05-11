@@ -163,12 +163,12 @@ public:
         tuneLocal(0.0),
         doNormalizeChroma(0),
         rollon(0.0),
-            s(0.7),
-            sinvalues(0),
-            cosvalues(0),
-            window(HanningWindow, block_size),
-            fft(block_size),
-            inputSampleRate(inputSampleRate)
+        s(0.7),
+        sinvalues(0),
+        cosvalues(0),
+        window(HanningWindow, block_size),
+        fft(block_size),
+        inputSampleRate(inputSampleRate)
     {
         // make the *note* dictionary matrix
         dict = new float[nNote * 84];
@@ -368,6 +368,7 @@ size_t SongPartitioner::m_chromaStepsizeFactor = 4;     // 4 times as long as be
 SongPartitioner::SongPartitioner(float inputSampleRate) :
     Vamp::Plugin(inputSampleRate),
     m_d(0),
+    m_chromadata(0),
     m_bpb(4),
     m_pluginFrameCount(0)
 {
@@ -378,6 +379,7 @@ SongPartitioner::SongPartitioner(float inputSampleRate) :
 SongPartitioner::~SongPartitioner()
 {
     delete m_d;
+    delete m_chromadata;
 }
 
 
@@ -468,6 +470,10 @@ bool SongPartitioner::initialise(size_t channels, size_t stepSize, size_t blockS
     if (m_d) {
         delete m_d;
         m_d = 0;
+    }
+    if (m_chromadata) {
+        delete m_chromadata;
+        m_chromadata = 0;
     }
 
     if (channels < getMinChannelCount() ||
