@@ -522,6 +522,7 @@ bool SongPartitioner::initialise(size_t channels, size_t stepSize, size_t blockS
 void SongPartitioner::reset()
 {
     if (m_d) m_d->reset();
+    if (m_chromadata) m_chromadata->reset();
     m_pluginFrameCount = 0;
 }
 
