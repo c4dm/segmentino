@@ -1861,6 +1861,7 @@ Vamp::Plugin::FeatureList SongPartitioner::runSegmenter(Vamp::Plugin::FeatureLis
     }
     
     int ind = finalParts[finalParts.size()-1].indices[0];
+    seg.hasTimestamp = true;
     seg.timestamp = quantisedChromagram[ind].timestamp;
     seg.hasDuration = true;
     seg.duration = quantisedChromagram[quantisedChromagram.size()-1].timestamp-quantisedChromagram[ind].timestamp;
