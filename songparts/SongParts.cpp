@@ -783,7 +783,11 @@ SongPartitioner::FeatureSet SongPartitioner::getRemainingFeatures()
     masterFeatureset[m_qchromaOutputNumber] = quantisedChroma[1];
     
     // Segmentation
-    masterFeatureset[m_segmOutputNumber] = runSegmenter(quantisedChroma[1]);
+    try {
+        masterFeatureset[m_segmOutputNumber] = runSegmenter(quantisedChroma[1]);
+    } catch (std::bad_alloc &a) {
+        cerr << "ERROR: SongPartitioner::getRemainingFeatures: Failed to run segmenter, not enough memory (song too long?)" << endl;
+    }
     
     return(masterFeatureset);
 }
