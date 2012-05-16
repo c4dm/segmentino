@@ -55,8 +55,8 @@ protected:
     BeatTrackerData *m_d;
     ChromaData *m_chromadata;
     static float m_stepSecs;
-    static size_t m_chromaFramesizeFactor;
-    static size_t m_chromaStepsizeFactor;
+    static int m_chromaFramesizeFactor;
+    static int m_chromaStepsizeFactor;
     int m_bpb;
     int m_pluginFrameCount;
     FeatureSet beatTrack();

@@ -116,7 +116,7 @@ public:
     int frameCount;
     int nBPS;
     Vamp::Plugin::FeatureList logSpectrum;
-    size_t blockSize;
+    int blockSize;
     int lengthOfNoteIndex;
     vector<float> meanTunings;
     vector<float> localTunings;
@@ -137,7 +137,7 @@ public:
     vector<float> cosvalues;
     Window<float> window;
     FFTReal fft;
-    size_t inputSampleRate;
+    int inputSampleRate;
     
     /* --- METHODS --- */
     
@@ -205,7 +205,7 @@ public:
 
         // FFTReal wants doubles, so we need to make a local copy of inputBuffers
         double *inputBuffersDouble = new double[blockSize];
-        for (size_t i = 0; i < blockSize; i++) inputBuffersDouble[i] = inputBuffers[i];
+        for (int i = 0; i < blockSize; i++) inputBuffersDouble[i] = inputBuffers[i];
         
         fft.process(false, inputBuffersDouble, fftReal, fftImag);
         
@@ -296,15 +296,15 @@ public:
     {
         dictionaryMatrix(dict, s);
         
-            // make things for tuning estimation
-            for (int iBPS = 0; iBPS < nBPS; ++iBPS) {
+        // make things for tuning estimation
+        for (int iBPS = 0; iBPS < nBPS; ++iBPS) {
             sinvalues.push_back(sin(2*M_PI*(iBPS*1.0/nBPS)));
             cosvalues.push_back(cos(2*M_PI*(iBPS*1.0/nBPS)));
         }
     
         
-            // make hamming window of length 1/2 octave
-            int hamwinlength = nBPS * 6 + 1;
+        // make hamming window of length 1/2 octave
+        int hamwinlength = nBPS * 6 + 1;
         float hamwinsum = 0;
         for (int i = 0; i < hamwinlength; ++i) { 
             hw.push_back(0.54 - 0.46 * cos((2*M_PI*i)/(hamwinlength-1)));    
@@ -346,6 +346,8 @@ public:
             }
         }
         delete [] tempkernel;
+
+        return true;
     }    
 };
 
@@ -358,8 +360,8 @@ public:
 /* --- ATTRIBUTES --- */
 
 float SongPartitioner::m_stepSecs = 0.01161;            // 512 samples at 44100
-size_t SongPartitioner::m_chromaFramesizeFactor = 16;   // 16 times as long as beat tracker's
-size_t SongPartitioner::m_chromaStepsizeFactor = 4;     // 4 times as long as beat tracker's
+int SongPartitioner::m_chromaFramesizeFactor = 16;   // 16 times as long as beat tracker's
+int SongPartitioner::m_chromaStepsizeFactor = 4;     // 4 times as long as beat tracker's
 
 
 /* --- METHODS --- */
@@ -526,7 +528,7 @@ void SongPartitioner::reset()
 SongPartitioner::OutputList SongPartitioner::getOutputDescriptors() const
 {
     OutputList list;
-    size_t outputCounter = 0;
+    int outputCounter = 0;
 
     OutputDescriptor beat;
     beat.identifier = "beats";
@@ -766,7 +768,7 @@ SongPartitioner::FeatureSet SongPartitioner::getRemainingFeatures()
     FeatureSet masterFeatureset = beatTrack();
     FeatureList chromaList = chromaFeatures();
     
-    for (size_t i = 0; i < chromaList.size(); ++i)
+    for (int i = 0; i < (int)chromaList.size(); ++i)
     {
         masterFeatureset[m_bothchromaOutputNumber].push_back(chromaList[i]);
     }
@@ -793,7 +795,7 @@ SongPartitioner::FeatureSet SongPartitioner::beatTrack()
     vector<double> beatPeriod;
     vector<double> tempi;
     
-    for (size_t i = 2; i < m_d->dfOutput.size(); ++i) { // discard first two elts
+    for (int i = 2; i < (int)m_d->dfOutput.size(); ++i) { // discard first two elts
         df.push_back(m_d->dfOutput[i]);
         beatPeriod.push_back(0.0);
     }
@@ -832,11 +834,11 @@ SongPartitioner::FeatureSet SongPartitioner::beatTrack()
         if (beat == m_bpb) beat = 0;
     }
 
-    for (size_t i = 0; i < beats.size(); ++i) {
+    for (int i = 0; i < (int)beats.size(); ++i) {
         
-        size_t frame = beats[i] * m_d->dfConfig.stepSize;
+        int frame = beats[i] * m_d->dfConfig.stepSize;
         
-        if (dbi < downbeats.size() && i == downbeats[dbi]) {
+        if (dbi < (int)downbeats.size() && i == downbeats[dbi]) {
             beat = 0;
             ++bar;
             ++dbi;
@@ -863,7 +865,7 @@ SongPartitioner::FeatureSet SongPartitioner::beatTrack()
         feature.values.push_back(beat + 1);
         returnFeatures[m_beatcountsOutputNumber].push_back(feature);    // beat function
         
-        if (i > 0 && i <= beatsd.size()) {
+        if (i > 0 && i <= (int)beatsd.size()) {
             feature.values.clear();
             feature.values.push_back(beatsd[i-1]);
             feature.label = "";
@@ -1097,7 +1099,7 @@ SongPartitioner::beatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugi
     
     if (nBeat == 0 && nChromaFrame == 0) return returnVector;
     
-    size_t nBin = chromagram[0].values.size();
+    int nBin = chromagram[0].values.size();
     
     vector<float> tempChroma = vector<float>(nBin);
     
@@ -1110,8 +1112,11 @@ SongPartitioner::beatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugi
         Vamp::RealTime frameTimestamp = chromagram[iChroma].timestamp;
         Vamp::RealTime newBeatTimestamp;
                 
-        if (currBeatCount != beats.size()-1) newBeatTimestamp = beats[currBeatCount+1].timestamp;
-        else newBeatTimestamp = chromagram[nChromaFrame-1].timestamp;
+        if (currBeatCount != (int)beats.size() - 1) {
+            newBeatTimestamp = beats[currBeatCount+1].timestamp;
+        } else {
+            newBeatTimestamp = chromagram[nChromaFrame-1].timestamp;
+        }
                 
         if (frameTimestamp > newBeatTimestamp ||
             iChroma == nChromaFrame-1)
@@ -1142,11 +1147,11 @@ SongPartitioner::beatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugi
             // 2. increments / resets for current (new) beat
             currBeatCount++;
             beatTimestamp = newBeatTimestamp;
-            for (size_t i = 0; i < nBin; ++i) tempChroma[i] = 0; // average
+            for (int i = 0; i < nBin; ++i) tempChroma[i] = 0; // average
             framesInBeat = 0;
         }
         framesInBeat++;
-        for (size_t i = 0; i < nBin; ++i) tempChroma[i] += chromagram[iChroma].values[i];
+        for (int i = 0; i < nBin; ++i) tempChroma[i] += chromagram[iChroma].values[i];
     }
     returnVector.push_back(fwQchromagram);
     returnVector.push_back(bwQchromagram);
@@ -1168,7 +1173,7 @@ arma::vec medfilt1(arma::vec v, int medfilt_length)
     // padding 
     arma::vec padV = arma::zeros<arma::vec>(v.size()+medfilt_length-1);
     
-    for (int i=medfilt_length/2; i < medfilt_length/2+v.size(); ++ i)
+    for (int i=medfilt_length/2; i < medfilt_length/2+(int)v.size(); ++ i)
     {
         padV(i) = v(i-medfilt_length/2);
     }    
@@ -1176,7 +1181,7 @@ arma::vec medfilt1(arma::vec v, int medfilt_length)
     // Median filter
     arma::vec win = arma::zeros<arma::vec>(medfilt_length);
     
-    for (int i=0; i < v.size(); ++i)
+    for (int i=0; i < (int)v.size(); ++i)
     {
         win = padV.subvec(i,i+halfWin*2);
         win = sort(win);
@@ -1223,7 +1228,7 @@ arma::mat maxfilt1(arma::mat inmat, int len)
 {
     arma::mat outmat = inmat;
     
-    for (int i=0; i<inmat.n_rows; ++i)
+    for (int i=0; i < (int)inmat.n_rows; ++i)
     {
         if (arma::sum(inmat.row(i)) > 0)
         {
@@ -1236,7 +1241,7 @@ arma::mat maxfilt1(arma::mat inmat, int len)
             else
                 startWin = i-len;
             
-            if (inmat.n_rows-1 < i+len-1)
+            if ((int)inmat.n_rows-1 < i+len-1)
                 endWin = inmat.n_rows-1;
             else
                 endWin = i+len-1;
@@ -1253,10 +1258,10 @@ arma::mat maxfilt1(arma::mat inmat, int len)
 Part nullpart(vector<Part> parts, arma::vec barline)
 {
     arma::uvec nullindices = arma::ones<arma::uvec>(barline.size());
-    for (int iPart=0; iPart<parts.size(); ++iPart)
+    for (int iPart=0; iPart<(int)parts.size(); ++iPart)
     {
         //for (int iIndex=0; iIndex < parts[0].indices.size(); ++iIndex) 
-        for (int iIndex=0; iIndex < parts[iPart].indices.size(); ++iIndex) 
+        for (int iIndex=0; iIndex < (int)parts[iPart].indices.size(); ++iIndex) 
             for (int i=0; i<parts[iPart].n; ++i) 
             {
                 int ind = parts[iPart].indices[iIndex]+i;
@@ -1268,7 +1273,7 @@ Part nullpart(vector<Part> parts, arma::vec barline)
     newPart.n = 1;
     uvec q = find(nullindices > 0);
     
-    for (int i=0; i<q.size();++i) 
+    for (int i=0; i<(int)q.size();++i) 
         newPart.indices.push_back(q(i));
 
     newPart.letter = '-';
@@ -1282,7 +1287,7 @@ Part nullpart(vector<Part> parts, arma::vec barline)
 // Merge Nulls
 void mergenulls(vector<Part> &parts)
 {
-    for (int iPart=0; iPart<parts.size(); ++iPart)
+    for (int iPart=0; iPart<(int)parts.size(); ++iPart)
     {
         
         vector<Part> newVectorPart;
@@ -1295,10 +1300,10 @@ void mergenulls(vector<Part> &parts)
             vector<int> indices;
             indices.push_back(-2);
             
-            for (int iIndex=0; iIndex<parts[iPart].indices.size(); ++iIndex) 
+            for (int iIndex=0; iIndex<(int)parts[iPart].indices.size(); ++iIndex) 
                 indices.push_back(parts[iPart].indices[iIndex]);
             
-            for (int iInd=1; iInd < indices.size(); ++iInd)
+            for (int iInd=1; iInd < (int)indices.size(); ++iInd)
             { 
                 if (indices[iInd] - indices[iInd-1] > 1)
                 {
@@ -1323,7 +1328,7 @@ void mergenulls(vector<Part> &parts)
             }
             parts.erase (parts.end());
             
-            for (int i=0; i<newVectorPart.size(); ++i)
+            for (int i=0; i<(int)newVectorPart.size(); ++i)
                 parts.push_back(newVectorPart[i]);
         }
     }
@@ -1451,8 +1456,6 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
     arma::cube simArray = zeros<arma::cube>(nBeat,nBeat,nPartlengths);
     arma::cube decisionArray2 = zeros<arma::cube>(nBeat,nBeat,nPartlengths);
 
-    int conta = 0;
-       
     //for (int iLength = 0; iLength < nPartlengths; ++ iLength)
     for (int iLength = 0; iLength < 20; ++ iLength)
     {
@@ -1465,7 +1468,7 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
         {
             arma::uvec help2 = find(potential_duplicates(span(0,nUsedBeat-1),iBeat)==1);
             
-            for (int i=0; i<help2.size(); ++i)
+            for (int i=0; i < (int)help2.size(); ++i)
             {
 
                 // measure how well two length len segments go together
@@ -1483,7 +1486,7 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
         K << 0.01 << 0.98 << 0.01;
         
         
-        for (int i=0; i<simArray.n_rows; ++i)
+        for (int i=0; i < (int)simArray.n_rows; ++i)
         {
             arma::rowvec t = arma::conv((arma::rowvec)simArray.slice(iLength).row(i),K);
             simArray.slice(iLength)(i,span::all) = t.subvec(1,t.size()-2);
@@ -1494,8 +1497,8 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
         arma::mat temp = arma::zeros<mat>(simArray.n_rows, simArray.n_cols);
         temp(span::all, span(0,nUsedBeat-1)) = simArray.slice(iLength)(span::all,span(0,nUsedBeat-1));
         
-        for (int i=0; i<temp.n_rows; ++i)
-            for (int j=0; j<nUsedBeat; ++j)
+        for (int i=0; i < (int)temp.n_rows; ++i)
+            for (int j=0; j < nUsedBeat; ++j)
                 if (temp(i,j) < thresh_seg)
                     temp(i,j) = 0;
         
@@ -1503,15 +1506,15 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
 
         arma::mat maxMat = maxfilt1(decisionArray2.slice(iLength),len-1);
         
-        for (int i=0; i<decisionArray2.n_rows; ++i)
-            for (int j=0; j<decisionArray2.n_cols; ++j)
+        for (int i=0; i < (int)decisionArray2.n_rows; ++i)
+            for (int j=0; j < (int)decisionArray2.n_cols; ++j)
                 if (decisionArray2.slice(iLength)(i,j) < maxMat(i,j))
                     decisionArray2.slice(iLength)(i,j) = 0;
         
         decisionArray2.slice(iLength) = decisionArray2.slice(iLength) % arma::trans(decisionArray2.slice(iLength));
         
-        for (int i=0; i<simArray.n_rows; ++i)
-            for (int j=0; j<simArray.n_cols; ++j)
+        for (int i=0; i < (int)simArray.n_rows; ++i)
+            for (int j=0; j < (int)simArray.n_cols; ++j)
                 if (simArray.slice(iLength)(i,j) < thresh_seg)
                     potential_duplicates(i,j) = 0; 
     }
@@ -1524,21 +1527,21 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
     {
         arma::mat temp = arma::zeros<arma::mat>(decisionArray2.n_rows,decisionArray2.n_cols);
 
-       for (int rows=0; rows<decisionArray2.n_rows; ++rows)
-            for (int cols=0; cols<decisionArray2.n_cols; ++cols)
+       for (int rows=0; rows < (int)decisionArray2.n_rows; ++rows)
+            for (int cols=0; cols < (int)decisionArray2.n_cols; ++cols)
                 if (decisionArray2.slice(iLength)(rows,cols) > 0)
                     temp(rows,cols) = 1;
         
         arma::vec currLogicSum = arma::sum(temp,1);
         
-        for (int iBeat=0; iBeat<nBeat; ++iBeat)
+        for (int iBeat=0; iBeat < nBeat; ++iBeat)
             if (currLogicSum(iBeat) > 1)
             {
                 arma::vec t = decisionArray2.slice(iLength)(span::all,iBeat);
                 double currSum = sum(t);
                 
                 int count = 0;
-                for (int i=0; i<t.size(); ++i)
+                for (int i=0; i < (int)t.size(); ++i)
                     if (t(i)>0)
                         count++;
                 
@@ -1566,7 +1569,7 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
         // In questo punto viene introdotto un errore alla 3 cifra decimale
         
         arma::colvec t = arma::zeros<arma::colvec>(bestval.n_rows);
-        for (int i=0; i<bestval.n_rows; ++i)
+        for (int i=0; i < (int)bestval.n_rows; ++i)
         {
             t(i) = bestval(i,1)*2;
         }
@@ -1577,15 +1580,15 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
         bestval(span::all,0) = bestval(span::all,0) + bestval(span::all,1);
         
         arma::mat bestval2;
-        for (int i=0; i<bestval.n_cols; ++i)
+        for (int i=0; i < (int)bestval.n_cols; ++i)
             if (i!=1)
                 bestval2 = join_rows(bestval2,bestval.col(i));
         
         for (int kSeg=0; kSeg<6; ++kSeg)
         {
             arma::mat currbestvals = arma::zeros<arma::mat>(bestval2.n_rows, bestval2.n_cols);
-            for (int i=0; i<bestval2.n_rows; ++i)
-                for (int j=0; j<bestval2.n_cols; ++j)
+            for (int i=0; i < (int)bestval2.n_rows; ++i)
+                for (int j=0; j < (int)bestval2.n_cols; ++j)
                     if (valid_sets(i))
                         currbestvals(i,j) = bestval2(i,j);
             
@@ -1601,7 +1604,7 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
             arma::rowvec bestIndices = decisionArray2.slice(currbestvals(maIdx,1))(currbestvals(maIdx,2),span::all);
                 
             arma::rowvec bestIndicesMap = arma::zeros<arma::rowvec>(bestIndices.size());
-            for (int i=0; i<bestIndices.size(); ++i)
+            for (int i=0; i < (int)bestIndices.size(); ++i)
                 if (bestIndices(i)>0)
                     bestIndicesMap(i) = 1;
                    
@@ -1617,7 +1620,7 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
             newPart.n = bestLength;
             uvec q1 = find(bestIndices > 0);
             
-            for (int i=0; i<q1.size();++i)
+            for (int i=0; i < (int)q1.size();++i)
                 newPart.indices.push_back(q1(i));
             
             newPart.letter = partletters[kSeg];
@@ -1627,7 +1630,7 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
             
             uvec q2 = find(valid_sets==1);
             
-            for (int i=0; i<q2.size(); ++i)
+            for (int i=0; i < (int)q2.size(); ++i)
             {
                 int iSet = q2(i);
                 int s = partlengths(bestval2(iSet,1));
@@ -1638,7 +1641,7 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
                 
                 arma::rowvec Ind = decisionArray2.slice(bestval2(iSet,1))(bestval2(iSet,2),span::all);
                 arma::rowvec IndMap = arma::zeros<arma::rowvec>(Ind.size());
-                for (int i=0; i<Ind.size(); ++i)
+                for (int i=0; i < (int)Ind.size(); ++i)
                     if (Ind(i)>0)
                         IndMap(i) = 2;
                 
@@ -1721,7 +1724,7 @@ void songSegmentChroma(Vamp::Plugin::FeatureList quantisedChromagram, vector<Par
     arma::mat segTreble = arma::zeros<arma::mat>(quantisedChromagram.size(),quantisedChromagram[0].values.size()/2);
     arma::mat segBass = arma::zeros<arma::mat>(quantisedChromagram.size(),quantisedChromagram[0].values.size()/2);
     
-    for (int iPart=0; iPart<parts.size(); ++iPart)
+    for (int iPart=0; iPart < (int)parts.size(); ++iPart)
     {
         parts[iPart].nInd = parts[iPart].indices.size();
         
@@ -1744,7 +1747,7 @@ vector<Part> songSegmentIntegration(vector<Part> &parts)
     vector<Part> newPartVector;
     vector<int> partindices;
     
-    for (int iPart=0; iPart<parts.size(); ++iPart)
+    for (int iPart=0; iPart < (int)parts.size(); ++iPart)
     {
         parts[iPart].nInd = parts[iPart].indices.size();
         for (int iInstance=0; iInstance<parts[iPart].nInd; ++iInstance)
@@ -1766,7 +1769,7 @@ vector<Part> songSegmentIntegration(vector<Part> &parts)
     // Sort the parts in order of occurrence
     sort (partindices.begin(), partindices.end());
     
-    for (int i=0; i<partindices.size(); ++i)
+    for (int i=0; i < (int)partindices.size(); ++i)
     {
         bool found = false;
         int in=0;    
@@ -1784,7 +1787,7 @@ vector<Part> songSegmentIntegration(vector<Part> &parts)
     }
     
     // Clear the vector
-    for (int iNewpart=1; iNewpart < newPartVector.size(); ++iNewpart)
+    for (int iNewpart=1; iNewpart < (int)newPartVector.size(); ++iNewpart)
     {
         if (newPartVector[iNewpart].n < 12)
         {
@@ -1800,8 +1803,8 @@ vector<Part> songSegmentIntegration(vector<Part> &parts)
 Vamp::Plugin::FeatureList SongPartitioner::runSegmenter(Vamp::Plugin::FeatureList quantisedChromagram)
 {
     /* --- Display Information --- */
-    int numBeat = quantisedChromagram.size();
-    int numFeats = quantisedChromagram[0].values.size();
+//    int numBeat = quantisedChromagram.size();
+//    int numFeats = quantisedChromagram[0].values.size();
 
     vector<Part> parts;
     vector<Part> finalParts;
@@ -1838,11 +1841,11 @@ Vamp::Plugin::FeatureList SongPartitioner::runSegmenter(Vamp::Plugin::FeatureLis
     Feature seg;
     
     arma::vec indices;
-    int idx=0;
+//    int idx=0;
     vector<int> values;
     vector<string> letters;
     
-    for (int iPart=0; iPart<finalParts.size()-1; ++iPart)
+    for (int iPart=0; iPart < (int)finalParts.size()-1; ++iPart)
     {
         int iInstance=0;
         seg.hasTimestamp = true;
@@ -1860,16 +1863,18 @@ Vamp::Plugin::FeatureList SongPartitioner::runSegmenter(Vamp::Plugin::FeatureLis
         results.push_back(seg);
     }
     
-    int ind = finalParts[finalParts.size()-1].indices[0];
-    seg.hasTimestamp = true;
-    seg.timestamp = quantisedChromagram[ind].timestamp;
-    seg.hasDuration = true;
-    seg.duration = quantisedChromagram[quantisedChromagram.size()-1].timestamp-quantisedChromagram[ind].timestamp;
-    seg.values.clear();
-    seg.values.push_back(finalParts[finalParts.size()-1].value);
-    seg.label = finalParts[finalParts.size()-1].letter;
+    if (finalParts.size() > 0) {
+        int ind = finalParts[finalParts.size()-1].indices[0];
+        seg.hasTimestamp = true;
+        seg.timestamp = quantisedChromagram[ind].timestamp;
+        seg.hasDuration = true;
+        seg.duration = quantisedChromagram[quantisedChromagram.size()-1].timestamp-quantisedChromagram[ind].timestamp;
+        seg.values.clear();
+        seg.values.push_back(finalParts[finalParts.size()-1].value);
+        seg.label = finalParts[finalParts.size()-1].letter;
     
-    results.push_back(seg);
+        results.push_back(seg);
+    }
 
     return results;    
 }
