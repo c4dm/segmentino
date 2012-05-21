@@ -1098,9 +1098,10 @@ SongPartitioner::beatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugi
     
     FeatureList fwQchromagram; // frame-wise beat-quantised chroma
     FeatureList bwQchromagram; // beat-wise beat-quantised chroma
-    
-    int nChromaFrame = (int) chromagram.size();
-    int nBeat = (int) beats.size();
+
+
+    size_t nChromaFrame = chromagram.size();
+    size_t nBeat = beats.size();
     
     if (nBeat == 0 && nChromaFrame == 0) return returnVector;
     
@@ -1112,7 +1113,7 @@ SongPartitioner::beatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugi
     int currBeatCount = -1; // start before first beat
     int framesInBeat = 0;
     
-    for (int iChroma = 0; iChroma < nChromaFrame; ++iChroma)
+    for (size_t iChroma = 0; iChroma < nChromaFrame; ++iChroma)
     {
         Vamp::RealTime frameTimestamp = chromagram[iChroma].timestamp;
         Vamp::RealTime newBeatTimestamp;
@@ -1162,6 +1163,8 @@ SongPartitioner::beatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugi
     returnVector.push_back(bwQchromagram);
     return returnVector;
 }
+
+
 
 /* -------------------------------- */
 /* ------ Support Functions  ------ */
