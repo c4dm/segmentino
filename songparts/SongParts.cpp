@@ -1419,10 +1419,10 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
     arma::mat simmat = 1-simmat0/2;
     
     // -------- To delate when the proble with the add of beat will be solved -------
-    // for (int i = 0; i < nBeat; ++ i)
-    //  for (int j = 0; j < nBeat; ++ j)
-    //      if (!std::isfinite(simmat(i,j)))
-    //          simmat(i,j)=0;
+    for (int i = 0; i < nBeat; ++ i)
+     for (int j = 0; j < nBeat; ++ j)
+         if (!std::isfinite(simmat(i,j)))
+             simmat(i,j)=0;
     // ------------------------------------------------------------------------------
     
     // Median Filtering applied to the Correlation Matrix
