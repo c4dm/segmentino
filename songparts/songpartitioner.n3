@@ -1,0 +1,148 @@
+@prefix rdfs:     <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:      <http://www.w3.org/2001/XMLSchema#> .
+@prefix vamp:     <http://purl.org/ontology/vamp/> .
+@prefix plugbase: <http://vamp-plugins.org/rdf/plugins/songpartitioner#> .
+@prefix owl:      <http://www.w3.org/2002/07/owl#> .
+@prefix dc:       <http://purl.org/dc/elements/1.1/> .
+@prefix af:       <http://purl.org/ontology/af/> .
+@prefix foaf:     <http://xmlns.com/foaf/0.1/> .
+@prefix cc:       <http://web.resource.org/cc/> .
+@prefix :         <#> .
+
+<>  a   vamp:PluginDescription ;
+    foaf:maker          <http://www.vamp-plugins.org/doap.rdf#template-generator> ;
+    foaf:primaryTopic   <http://vamp-plugins.org/rdf/plugins/songpartitioner> .
+
+:songpartitioner a  vamp:PluginLibrary ;
+    vamp:identifier "songpartitioner"  ; 
+    vamp:available_plugin plugbase:qm-songpartitioner 
+    .
+
+plugbase:qm-songpartitioner a   vamp:Plugin ;
+    dc:title              "Song Partitioner" ;
+    vamp:name             "Song Partitioner" ;
+    dc:description        """Estimate contiguous segments pertaining to song parts such as verse and chorus.""" ;
+    foaf:maker            [ foaf:name "Queen Mary, University of London" ] ;
+    dc:rights             """Plugin by Matthew Davies, Christian Landone, Chris Cannam, Matthias Mauch and Massimiliano Zanoni  Copyright (c) 2006-2012 QMUL - All Rights Reserved""" ;
+    cc:license            <www.gnu.org/licenses/gpl-2.0.html> ; 
+    vamp:identifier       "qm-songpartitioner" ;
+    vamp:vamp_API_version vamp:api_version_2 ;
+    owl:versionInfo       "2" ;
+    vamp:input_domain     vamp:TimeDomain ;
+
+    vamp:parameter   plugbase:qm-songpartitioner_param_bpb ;
+
+    vamp:output      plugbase:qm-songpartitioner_output_beats ;
+    vamp:output      plugbase:qm-songpartitioner_output_bars ;
+    vamp:output      plugbase:qm-songpartitioner_output_beatcounts ;
+    vamp:output      plugbase:qm-songpartitioner_output_beatsd ;
+    vamp:output      plugbase:qm-songpartitioner_output_logscalespec ;
+    vamp:output      plugbase:qm-songpartitioner_output_bothchroma ;
+    vamp:output      plugbase:qm-songpartitioner_output_qchromafw ;
+    vamp:output      plugbase:qm-songpartitioner_output_qchroma ;
+    vamp:output      plugbase:qm-songpartitioner_output_segmentation ;
+    .
+plugbase:qm-songpartitioner_param_bpb a  vamp:QuantizedParameter ;
+    vamp:identifier     "bpb" ;
+    dc:title            "Beats per Bar" ;
+    dc:format           "" ;
+    vamp:min_value       2 ;
+    vamp:max_value       16 ;
+    vamp:unit           "" ;
+    vamp:quantize_step   1  ;
+    vamp:default_value   4 ;
+    vamp:value_names     ();
+    .
+plugbase:qm-songpartitioner_output_beats a  vamp:SparseOutput ;
+    vamp:identifier       "beats" ;
+    dc:title              "Beats" ;
+    dc:description        """Beat locations labelled with metrical position"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        0 ;
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      86.1326 ;
+    vamp:computes_event_type   af:Beat
+    .
+plugbase:qm-songpartitioner_output_bars a  vamp:SparseOutput ;
+    vamp:identifier       "bars" ;
+    dc:title              "Bars" ;
+    dc:description        """Bar locations"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        0 ;
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      86.1326 
+    .
+plugbase:qm-songpartitioner_output_beatcounts a  vamp:SparseOutput ;
+    vamp:identifier       "beatcounts" ;
+    dc:title              "Beat Count" ;
+    dc:description        """Beat counter function"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        1 ;
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      86.1326 
+    .
+plugbase:qm-songpartitioner_output_beatsd a  vamp:SparseOutput ;
+    vamp:identifier       "beatsd" ;
+    dc:title              "Beat Spectral Difference" ;
+    dc:description        """Beat spectral difference function used for bar-line detection"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        1 ;
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      86.1326 
+    .
+plugbase:qm-songpartitioner_output_logscalespec a  vamp:DenseOutput ;
+    vamp:identifier       "logscalespec" ;
+    dc:title              "Log-Frequency Spectrum" ;
+    dc:description        """Spectrum with linear frequency on a log scale."""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        256 
+    .
+plugbase:qm-songpartitioner_output_bothchroma a  vamp:DenseOutput ;
+    vamp:identifier       "bothchroma" ;
+    dc:title              "Chromagram and Bass Chromagram" ;
+    dc:description        """Tuning-adjusted chromagram and bass chromagram (stacked on top of each other) from NNLS approximate transcription."""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        24 ;
+    vamp:computes_signal_type  af:Chromagram
+    .
+plugbase:qm-songpartitioner_output_qchromafw a  vamp:DenseOutput ;
+    vamp:identifier       "qchromafw" ;
+    dc:title              "Pseudo-Quantised Chromagram and Bass Chromagram" ;
+    dc:description        """Pseudo-Quantised Chromagram and Bass Chromagram (frames between two beats are identical)."""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        24 ;
+    vamp:computes_signal_type  af:Chromagram
+    .
+plugbase:qm-songpartitioner_output_qchroma a  vamp:DenseOutput ;
+    vamp:identifier       "qchroma" ;
+    dc:title              "Quantised Chromagram and Bass Chromagram" ;
+    dc:description        """Quantised Chromagram and Bass Chromagram."""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "" ;
+    vamp:bin_count        24 ;
+    vamp:computes_signal_type  af:Chromagram
+    .
+plugbase:qm-songpartitioner_output_segmentation a  vamp:SparseOutput ;
+    vamp:identifier       "segmentation" ;
+    dc:title              "Segmentation" ;
+    dc:description        """Segmentation"""  ;
+    vamp:fixed_bin_count  "true" ;
+    vamp:unit             "segment-type" ;
+    a                     vamp:QuantizedOutput ;
+    vamp:quantize_step    1  ;
+    a                 vamp:KnownExtentsOutput ;
+    vamp:min_value    1  ;
+    vamp:max_value    5  ;
+    vamp:bin_count        1 ;
+    vamp:sample_type      vamp:VariableSampleRate ;
+    vamp:sample_rate      86.1326 ;
+    vamp:computes_event_type  af:StructuralSegment
+    .
+
