@@ -1322,7 +1322,8 @@ void mergenulls(vector<Part> &parts)
                     std::stringstream out;
                     out << newpartind+1;
                     newPart.letter.append(out.str());
-                    newPart.value = 20+newpartind+1;
+                    // newPart.value = 20+newpartind+1;
+                    newPart.value = 0;
                     newPart.n = 1;
                     newPart.indices.push_back(indices[iInd]);
                     newPart.level = 0;   
@@ -1391,13 +1392,13 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
     for (int i = 0; i < nBeat; ++ i)
         for (int j = 0; j < nFeatValues/2; ++ j)
         {
-            featVal(i,j) = (quantisedChromagram[i].values[j]+quantisedChromagram[i].values[j+12]) * 0.8;
+            featVal(i,j) = 0.8 * quantisedChromagram[i].values[j] + quantisedChromagram[i].values[j+12]; // bass attenuated
         }
     
     // Set to arbitrary value to feature vectors with low std
     arma::mat a = stddev(featVal,1,1);
     
-    // Feature Colleration Matrix
+    // Feature Correlation Matrix
     arma::mat simmat0 = 1-arma::cor(arma::trans(featVal));
     
 
@@ -1418,10 +1419,10 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
     arma::mat simmat = 1-simmat0/2;
     
     // -------- To delate when the proble with the add of beat will be solved -------
-    for (int i = 0; i < nBeat; ++ i)
-     for (int j = 0; j < nBeat; ++ j)
-         if (!std::isfinite(simmat(i,j)))
-             simmat(i,j)=0;
+    // for (int i = 0; i < nBeat; ++ i)
+    //  for (int j = 0; j < nBeat; ++ j)
+    //      if (!std::isfinite(simmat(i,j)))
+    //          simmat(i,j)=0;
     // ------------------------------------------------------------------------------
     
     // Median Filtering applied to the Correlation Matrix

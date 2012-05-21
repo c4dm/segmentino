@@ -59,15 +59,15 @@
 // #define ARMA_USE_TBB_ALLOC
 //// Uncomment the above line if you want to use Intel TBB scalable_malloc() and scalable_free() instead of standard new[] and delete[]
 
-// #define ARMA_USE_ATLAS
-// #define ARMA_ATLAS_INCLUDE_DIR /usr/include/
+/* #undef ARMA_USE_ATLAS */
+#define ARMA_ATLAS_INCLUDE_DIR /
 //// If you're using ATLAS and the compiler can't find cblas.h and/or clapack.h
 //// uncomment the above define and specify the appropriate include directory.
 //// Make sure the directory has a trailing /
 
-// #define ARMA_USE_BOOST
-// #define ARMA_USE_BOOST_DATE
-// #define ARMA_USE_WRAPPER
+#define ARMA_USE_BOOST
+#define ARMA_USE_BOOST_DATE
+#define ARMA_USE_WRAPPER
 
 #if !defined(ARMA_DEFAULT_OSTREAM)
   #define ARMA_DEFAULT_OSTREAM std::cout
@@ -76,13 +76,13 @@
 #define ARMA_PRINT_LOGIC_ERRORS
 #define ARMA_PRINT_RUNTIME_ERRORS
 
-// #define ARMA_HAVE_STD_ISFINITE
-// #define ARMA_HAVE_STD_ISINF
-// #define ARMA_HAVE_STD_ISNAN
-// #define ARMA_HAVE_STD_SNPRINTF
+#define ARMA_HAVE_STD_ISFINITE
+#define ARMA_HAVE_STD_ISINF
+#define ARMA_HAVE_STD_ISNAN
+#define ARMA_HAVE_STD_SNPRINTF
 
-// #define ARMA_HAVE_LOG1P
-// #define ARMA_HAVE_GETTIMEOFDAY
+#define ARMA_HAVE_LOG1P
+#define ARMA_HAVE_GETTIMEOFDAY
 
 // #define ARMA_EXTRA_DEBUG
 // #define ARMA_NO_DEBUG
