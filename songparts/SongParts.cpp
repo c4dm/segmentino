@@ -422,15 +422,15 @@ SongPartitioner::ParameterList SongPartitioner::getParameterDescriptors() const
 
     ParameterDescriptor desc;
 
-    desc.identifier = "bpb";
-    desc.name = "Beats per Bar";
-    desc.description = "The number of beats in each bar";
-    desc.minValue = 2;
-    desc.maxValue = 16;
-    desc.defaultValue = 4;
-    desc.isQuantized = true;
-    desc.quantizeStep = 1;
-    list.push_back(desc);
+    // desc.identifier = "bpb";
+    // desc.name = "Beats per Bar";
+    // desc.description = "The number of beats in each bar";
+    // desc.minValue = 2;
+    // desc.maxValue = 16;
+    // desc.defaultValue = 4;
+    // desc.isQuantized = true;
+    // desc.quantizeStep = 1;
+    // list.push_back(desc);
 
     return list;
 }
@@ -767,6 +767,19 @@ SongPartitioner::FeatureSet SongPartitioner::getRemainingFeatures()
     }
 
     FeatureSet masterFeatureset = beatTrack();
+    Vamp::RealTime last_beattime = masterFeatureset[m_beatOutputNumber][masterFeatureset[m_beatOutputNumber].size()-1].timestamp;
+    masterFeatureset[m_beatOutputNumber].clear();
+    Vamp::RealTime beattime = Vamp::RealTime::fromSeconds(1.0);
+    while (beattime < last_beattime)
+    {
+        Feature beatfeature;
+        beatfeature.hasTimestamp = true;
+        beatfeature.timestamp = beattime;
+        masterFeatureset[m_beatOutputNumber].push_back(beatfeature);
+        beattime = beattime + Vamp::RealTime::fromSeconds(0.5);
+    }
+    
+    
     FeatureList chromaList = chromaFeatures();
     
     for (int i = 0; i < (int)chromaList.size(); ++i)
@@ -1173,6 +1186,7 @@ SongPartitioner::beatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugi
 // one-dimesion median filter
 arma::vec medfilt1(arma::vec v, int medfilt_length)
 {    
+    // TODO: check if this works with odd and even medfilt_length !!!
     int halfWin = medfilt_length/2;
     
     // result vector
@@ -1184,7 +1198,14 @@ arma::vec medfilt1(arma::vec v, int medfilt_length)
     for (int i=medfilt_length/2; i < medfilt_length/2+(int)v.size(); ++ i)
     {
         padV(i) = v(i-medfilt_length/2);
-    }    
+    }
+    
+    // the above loop leaves the boundaries at 0, 
+    // the two loops below fill them with the start or end values of v at start and end
+    for (int i = 0; i < halfWin; ++i) padV(i) = v(0);
+    for (int i = halfWin+(int)v.size(); i < (int)v.size()+2*halfWin; ++i) padV(i) = v(v.size()-1);
+    
+    
     
     // Median filter
     arma::vec win = arma::zeros<arma::vec>(medfilt_length);
@@ -1318,7 +1339,7 @@ void mergenulls(vector<Part> &parts)
                     newpartind++;
 
                     Part newPart;
-                    newPart.letter = 'n';
+                    newPart.letter = 'N';
                     std::stringstream out;
                     out << newpartind+1;
                     newPart.letter.append(out.str());
@@ -1352,9 +1373,9 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
     /* ------ Parameters ------ */
     double thresh_beat = 0.85;
     double thresh_seg = 0.80;
-    int medfilt_length = 5;
+    int medfilt_length = 5; 
     int minlength = 28;
-    int maxlength = 128;
+    int maxlength = 2*128;
     double quantilePerc = 0.1;
     /* ------------------------ */
     
@@ -1459,14 +1480,14 @@ vector<Part> songSegment(Vamp::Plugin::FeatureList quantisedChromagram)
     arma::vec partlengths = zeros<arma::vec>(nPartlengths);
     
     for (int i = 0; i < nPartlengths; ++ i)
-        partlengths(i) = (i*4)+ minlength;
+        partlengths(i) = (i*4) + minlength;
     
     // initialise arrays
     arma::cube simArray = zeros<arma::cube>(nBeat,nBeat,nPartlengths);
     arma::cube decisionArray2 = zeros<arma::cube>(nBeat,nBeat,nPartlengths);
 
-    //for (int iLength = 0; iLength < nPartlengths; ++ iLength)
-    for (int iLength = 0; iLength < 20; ++ iLength)
+    for (int iLength = 0; iLength < nPartlengths; ++ iLength)
+    // for (int iLength = 0; iLength < 20; ++ iLength)
     {
         int len = partlengths(iLength);
         int nUsedBeat = nBeat - len + 1;                   // number of potential rep beginnings: they can't overlap at the end of the song
