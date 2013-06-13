@@ -395,12 +395,12 @@ Segmentino::~Segmentino()
 /* --- Methods --- */
 string Segmentino::getIdentifier() const
 {
-    return "qm-songpartitioner";
+    return "segmentino";
 }
 
 string Segmentino::getName() const
 {
-    return "Song Partitioner";
+    return "Segmentino";
 }
 
 string Segmentino::getDescription() const
