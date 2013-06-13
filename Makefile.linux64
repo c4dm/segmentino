@@ -1,0 +1,13 @@
+
+#CFLAGS := -O3 -fPIC -ftree-vectorize -I../armadillo-2.4.4/include -I../../vamp-plugin-sdk -I../../qm-dsp
+
+CFLAGS := -Wall -g -fPIC 
+
+CXXFLAGS  := $(CFLAGS)
+
+LDFLAGS	  := -shared -Wl,-Bsymbolic -Wl,--version-script=segmentino/vamp-plugin.map
+
+PLUGIN_EXT   := .so
+
+include Makefile.inc
+

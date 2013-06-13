@@ -17,18 +17,22 @@
 
 #include "Segmentino.h"
 
-#include <base/Window.h>
-#include <dsp/onsets/DetectionFunction.h>
-#include <dsp/onsets/PeakPicking.h>
-#include <dsp/transforms/FFT.h>
-#include <dsp/tempotracking/TempoTrackV2.h>
-#include <dsp/tempotracking/DownBeat.h>
-#include <chromamethods.h>
-#include <maths/MathUtilities.h>
+#include <qm-dsp/base/Window.h>
+#include <qm-dsp/dsp/onsets/DetectionFunction.h>
+#include <qm-dsp/dsp/onsets/PeakPicking.h>
+#include <qm-dsp/dsp/transforms/FFT.h>
+#include <qm-dsp/dsp/tempotracking/TempoTrackV2.h>
+#include <qm-dsp/dsp/tempotracking/DownBeat.h>
+#include <qm-dsp/maths/MathUtilities.h>
+
+#include <nnls-chroma/chromamethods.h>
+
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/math/distributions/normal.hpp>
-#include "armadillo"
+
+#include <armadillo>
+
 #include <fstream>
 #include <sstream>
 #include <cmath>
@@ -770,7 +774,9 @@ Segmentino::FeatureSet Segmentino::getRemainingFeatures()
     }
 
     FeatureSet masterFeatureset = beatTrack();
-    Vamp::RealTime last_beattime = masterFeatureset[m_beatOutputNumber][masterFeatureset[m_beatOutputNumber].size()-1].timestamp;
+    int beatcount = masterFeatureset[m_beatOutputNumber].size();
+    if (beatcount == 0) return Segmentino::FeatureSet();
+    Vamp::RealTime last_beattime = masterFeatureset[m_beatOutputNumber][beatcount-1].timestamp;
     masterFeatureset[m_beatOutputNumber].clear();
     Vamp::RealTime beattime = Vamp::RealTime::fromSeconds(1.0);
     while (beattime < last_beattime)
