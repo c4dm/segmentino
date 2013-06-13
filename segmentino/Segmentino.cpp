@@ -536,6 +536,17 @@ bool Segmentino::initialise(size_t channels, size_t stepSize, size_t blockSize)
     m_chromadata = new ChromaData(m_inputSampleRate, blockSize);
     m_chromadata->initialise();
     
+    // definition of outputs numbers used internally
+    int outputCounter = 1;
+    m_beatOutputNumber = outputCounter++;
+    m_barsOutputNumber = outputCounter++;
+    m_beatcountsOutputNumber = outputCounter++;
+    m_beatsdOutputNumber = outputCounter++;
+    m_logscalespecOutputNumber = outputCounter++;
+    m_bothchromaOutputNumber = outputCounter++;
+    m_qchromafwOutputNumber = outputCounter++;    
+    m_qchromaOutputNumber = outputCounter++;
+
     return true;
 }
 
@@ -548,108 +559,8 @@ void Segmentino::reset()
 
 Segmentino::OutputList Segmentino::getOutputDescriptors() const
 {
-    OutputList list;
-    int outputCounter = 0;
 
-    OutputDescriptor beat;
-    beat.identifier = "beats";
-    beat.name = "Beats";
-    beat.description = "Beat locations labelled with metrical position";
-    beat.unit = "";
-    beat.hasFixedBinCount = true;
-    beat.binCount = 0;
-    beat.sampleType = OutputDescriptor::VariableSampleRate;
-    beat.sampleRate = 1.0 / m_stepSecs;
-    m_beatOutputNumber = outputCounter++;
-    
-    OutputDescriptor bars;
-    bars.identifier = "bars";
-    bars.name = "Bars";
-    bars.description = "Bar locations";
-    bars.unit = "";
-    bars.hasFixedBinCount = true;
-    bars.binCount = 0;
-    bars.sampleType = OutputDescriptor::VariableSampleRate;
-    bars.sampleRate = 1.0 / m_stepSecs;
-    m_barsOutputNumber = outputCounter++;
-    
-    OutputDescriptor beatcounts;
-    beatcounts.identifier = "beatcounts";
-    beatcounts.name = "Beat Count";
-    beatcounts.description = "Beat counter function";
-    beatcounts.unit = "";
-    beatcounts.hasFixedBinCount = true;
-    beatcounts.binCount = 1;
-    beatcounts.sampleType = OutputDescriptor::VariableSampleRate;
-    beatcounts.sampleRate = 1.0 / m_stepSecs;
-    m_beatcountsOutputNumber = outputCounter++;
-    
-    OutputDescriptor beatsd;
-    beatsd.identifier = "beatsd";
-    beatsd.name = "Beat Spectral Difference";
-    beatsd.description = "Beat spectral difference function used for bar-line detection";
-    beatsd.unit = "";
-    beatsd.hasFixedBinCount = true;
-    beatsd.binCount = 1;
-    beatsd.sampleType = OutputDescriptor::VariableSampleRate;
-    beatsd.sampleRate = 1.0 / m_stepSecs;
-    m_beatsdOutputNumber = outputCounter++;
-    
-    OutputDescriptor logscalespec;
-    logscalespec.identifier = "logscalespec";
-    logscalespec.name = "Log-Frequency Spectrum";
-    logscalespec.description = "Spectrum with linear frequency on a log scale.";
-    logscalespec.unit = "";
-    logscalespec.hasFixedBinCount = true;
-    logscalespec.binCount = nNote;
-    logscalespec.hasKnownExtents = false;
-    logscalespec.isQuantized = false;
-    logscalespec.sampleType = OutputDescriptor::FixedSampleRate;
-    logscalespec.hasDuration = false;
-    logscalespec.sampleRate = m_inputSampleRate/2048;
-    m_logscalespecOutputNumber = outputCounter++;
-    
-    OutputDescriptor bothchroma;
-    bothchroma.identifier = "bothchroma";
-    bothchroma.name = "Chromagram and Bass Chromagram";
-    bothchroma.description = "Tuning-adjusted chromagram and bass chromagram (stacked on top of each other) from NNLS approximate transcription.";
-    bothchroma.unit = "";
-    bothchroma.hasFixedBinCount = true;
-    bothchroma.binCount = 24;
-    bothchroma.hasKnownExtents = false;
-    bothchroma.isQuantized = false;
-    bothchroma.sampleType = OutputDescriptor::FixedSampleRate;
-    bothchroma.hasDuration = false;
-    bothchroma.sampleRate = m_inputSampleRate/2048;
-    m_bothchromaOutputNumber = outputCounter++;
-    
-    OutputDescriptor qchromafw;
-    qchromafw.identifier = "qchromafw";
-    qchromafw.name = "Pseudo-Quantised Chromagram and Bass Chromagram";
-    qchromafw.description = "Pseudo-Quantised Chromagram and Bass Chromagram (frames between two beats are identical).";
-    qchromafw.unit = "";
-    qchromafw.hasFixedBinCount = true;
-    qchromafw.binCount = 24;
-    qchromafw.hasKnownExtents = false;
-    qchromafw.isQuantized = false;
-    qchromafw.sampleType = OutputDescriptor::FixedSampleRate;
-    qchromafw.hasDuration = false;
-    qchromafw.sampleRate = m_inputSampleRate/2048;
-    m_qchromafwOutputNumber = outputCounter++;    
-    
-    OutputDescriptor qchroma;
-    qchroma.identifier = "qchroma";
-    qchroma.name = "Quantised Chromagram and Bass Chromagram";
-    qchroma.description = "Quantised Chromagram and Bass Chromagram.";
-    qchroma.unit = "";
-    qchroma.hasFixedBinCount = true;
-    qchroma.binCount = 24;
-    qchroma.hasKnownExtents = false;
-    qchroma.isQuantized = false;
-    qchroma.sampleType = OutputDescriptor::FixedSampleRate;
-    qchroma.hasDuration = true;
-    qchroma.sampleRate = m_inputSampleRate/2048;
-    m_qchromaOutputNumber = outputCounter++;
+    OutputList list;
 
     OutputDescriptor segm;
     segm.identifier = "segmentation";
@@ -667,38 +578,8 @@ Segmentino::OutputList Segmentino::getOutputDescriptors() const
     segm.sampleType = OutputDescriptor::VariableSampleRate;
     segm.sampleRate = 1.0 / m_stepSecs;
     segm.hasDuration = true;
-    m_segmOutputNumber = outputCounter++;
-    
-    
-   /* 
-    OutputList list;
-    OutputDescriptor segmentation;
-    segmentation.identifier = "segmentation";
-    segmentation.name = "Segmentation";
-    segmentation.description = "Segmentation";
-    segmentation.unit = "segment-type";
-    segmentation.hasFixedBinCount = true;
-    segmentation.binCount = 1;
-    segmentation.hasKnownExtents = true;
-    segmentation.minValue = 1;
-    segmentation.maxValue = nSegmentTypes;
-    segmentation.isQuantized = true;
-    segmentation.quantizeStep = 1;
-    segmentation.sampleType = OutputDescriptor::VariableSampleRate;
-    segmentation.sampleRate = m_inputSampleRate / getPreferredStepSize();
-    list.push_back(segmentation);
-    return list;
-    */
-    
-    
-    list.push_back(beat);
-    list.push_back(bars);
-    list.push_back(beatcounts);
-    list.push_back(beatsd);
-    list.push_back(logscalespec);
-    list.push_back(bothchroma);
-    list.push_back(qchromafw);
-    list.push_back(qchroma);
+    m_segmOutputNumber = 0;
+
     list.push_back(segm);
 
     return list;
@@ -786,36 +667,38 @@ Segmentino::FeatureSet Segmentino::getRemainingFeatures()
         return FeatureSet();
     }
 
-    FeatureSet masterFeatureset = beatTrack();
-    int beatcount = masterFeatureset[m_beatOutputNumber].size();
+    FeatureSet masterFeatureset;
+    FeatureSet internalFeatureset = beatTrack();
+
+    int beatcount = internalFeatureset[m_beatOutputNumber].size();
     if (beatcount == 0) return Segmentino::FeatureSet();
-    Vamp::RealTime last_beattime = masterFeatureset[m_beatOutputNumber][beatcount-1].timestamp;
-    masterFeatureset[m_beatOutputNumber].clear();
-    Vamp::RealTime beattime = Vamp::RealTime::fromSeconds(1.0);
-    while (beattime < last_beattime)
-    {
-        Feature beatfeature;
-        beatfeature.hasTimestamp = true;
-        beatfeature.timestamp = beattime;
-        masterFeatureset[m_beatOutputNumber].push_back(beatfeature);
-        beattime = beattime + Vamp::RealTime::fromSeconds(0.5);
-    }
-    
+    Vamp::RealTime last_beattime = internalFeatureset[m_beatOutputNumber][beatcount-1].timestamp;
+
+    // internalFeatureset[m_beatOutputNumber].clear();
+    // Vamp::RealTime beattime = Vamp::RealTime::fromSeconds(1.0);
+    // while (beattime < last_beattime)
+    // {
+    //     Feature beatfeature;
+    //     beatfeature.hasTimestamp = true;
+    //     beatfeature.timestamp = beattime;
+    //     masterFeatureset[m_beatOutputNumber].push_back(beatfeature);
+    //     beattime = beattime + Vamp::RealTime::fromSeconds(0.5);
+    // }
     
     FeatureList chromaList = chromaFeatures();
     
     for (int i = 0; i < (int)chromaList.size(); ++i)
     {
-        masterFeatureset[m_bothchromaOutputNumber].push_back(chromaList[i]);
+        internalFeatureset[m_bothchromaOutputNumber].push_back(chromaList[i]);
     }
     
     // quantised and pseudo-quantised (beat-wise) chroma
-    std::vector<FeatureList> quantisedChroma = beatQuantiser(chromaList, masterFeatureset[m_beatOutputNumber]);
+    std::vector<FeatureList> quantisedChroma = beatQuantiser(chromaList, internalFeatureset[m_beatOutputNumber]);
 
     if (quantisedChroma.empty()) return masterFeatureset;
     
-    masterFeatureset[m_qchromafwOutputNumber] = quantisedChroma[0];
-    masterFeatureset[m_qchromaOutputNumber] = quantisedChroma[1];
+    internalFeatureset[m_qchromafwOutputNumber] = quantisedChroma[0];
+    internalFeatureset[m_qchromaOutputNumber] = quantisedChroma[1];
     
     // Segmentation
     try {
