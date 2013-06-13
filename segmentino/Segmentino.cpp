@@ -1,9 +1,12 @@
 /* -*- c-basic-offset: 4 indent-tabs-mode: nil -*-  vi:set ts=8 sts=4 sw=4: */
 
 /*
-    QM Vamp Plugin Set
+    Segmentino
 
-    Centre for Digital Music, Queen Mary, University of London.
+    Code by Massimiliano Zanoni and Matthias Mauch
+    Centre for Digital Music, Queen Mary, University of London
+
+    Copyright 2009-2013 Queen Mary, University of London.
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -12,7 +15,7 @@
     COPYING included with this distribution for more information.
 */
 
-#include "SongParts.h"
+#include "Segmentino.h"
 
 #include <base/Window.h>
 #include <dsp/onsets/DetectionFunction.h>
@@ -359,15 +362,15 @@ public:
 
 /* --- ATTRIBUTES --- */
 
-float SongPartitioner::m_stepSecs = 0.01161;            // 512 samples at 44100
-int SongPartitioner::m_chromaFramesizeFactor = 16;   // 16 times as long as beat tracker's
-int SongPartitioner::m_chromaStepsizeFactor = 4;     // 4 times as long as beat tracker's
+float Segmentino::m_stepSecs = 0.01161;            // 512 samples at 44100
+int Segmentino::m_chromaFramesizeFactor = 16;   // 16 times as long as beat tracker's
+int Segmentino::m_chromaStepsizeFactor = 4;     // 4 times as long as beat tracker's
 
 
 /* --- METHODS --- */
 
 /* --- Constructor --- */
-SongPartitioner::SongPartitioner(float inputSampleRate) :
+Segmentino::Segmentino(float inputSampleRate) :
     Vamp::Plugin(inputSampleRate),
     m_d(0),
     m_chromadata(0),
@@ -378,7 +381,7 @@ SongPartitioner::SongPartitioner(float inputSampleRate) :
 
 
 /* --- Desctructor --- */
-SongPartitioner::~SongPartitioner()
+Segmentino::~Segmentino()
 {
     delete m_d;
     delete m_chromadata;
@@ -386,37 +389,37 @@ SongPartitioner::~SongPartitioner()
 
 
 /* --- Methods --- */
-string SongPartitioner::getIdentifier() const
+string Segmentino::getIdentifier() const
 {
     return "qm-songpartitioner";
 }
 
-string SongPartitioner::getName() const
+string Segmentino::getName() const
 {
     return "Song Partitioner";
 }
 
-string SongPartitioner::getDescription() const
+string Segmentino::getDescription() const
 {
     return "Estimate contiguous segments pertaining to song parts such as verse and chorus.";
 }
 
-string SongPartitioner::getMaker() const
+string Segmentino::getMaker() const
 {
     return "Queen Mary, University of London";
 }
 
-int SongPartitioner::getPluginVersion() const
+int Segmentino::getPluginVersion() const
 {
     return 2;
 }
 
-string SongPartitioner::getCopyright() const
+string Segmentino::getCopyright() const
 {
     return "Plugin by Matthew Davies, Christian Landone, Chris Cannam, Matthias Mauch and Massimiliano Zanoni  Copyright (c) 2006-2012 QMUL - All Rights Reserved";
 }
 
-SongPartitioner::ParameterList SongPartitioner::getParameterDescriptors() const
+Segmentino::ParameterList Segmentino::getParameterDescriptors() const
 {
     ParameterList list;
 
@@ -435,20 +438,20 @@ SongPartitioner::ParameterList SongPartitioner::getParameterDescriptors() const
     return list;
 }
 
-float SongPartitioner::getParameter(std::string name) const
+float Segmentino::getParameter(std::string name) const
 {
     if (name == "bpb") return m_bpb;
     return 0.0;
 }
 
-void SongPartitioner::setParameter(std::string name, float value)
+void Segmentino::setParameter(std::string name, float value)
 {
     if (name == "bpb") m_bpb = lrintf(value);
 }
 
 
 // Return the StepSize for Chroma Extractor 
-size_t SongPartitioner::getPreferredStepSize() const
+size_t Segmentino::getPreferredStepSize() const
 {
     size_t step = size_t(m_inputSampleRate * m_stepSecs + 0.0001);
     if (step < 1) step = 1;
@@ -457,7 +460,7 @@ size_t SongPartitioner::getPreferredStepSize() const
 }
 
 // Return the BlockSize for Chroma Extractor 
-size_t SongPartitioner::getPreferredBlockSize() const
+size_t Segmentino::getPreferredBlockSize() const
 {
     size_t theoretical = getPreferredStepSize() * 2;
     theoretical *= m_chromaFramesizeFactor; 
@@ -467,7 +470,7 @@ size_t SongPartitioner::getPreferredBlockSize() const
 
 
 // Initialize the plugin and define Beat Tracker and Chroma Extractor Objects
-bool SongPartitioner::initialise(size_t channels, size_t stepSize, size_t blockSize)
+bool Segmentino::initialise(size_t channels, size_t stepSize, size_t blockSize)
 {
     if (m_d) {
         delete m_d;
@@ -480,19 +483,19 @@ bool SongPartitioner::initialise(size_t channels, size_t stepSize, size_t blockS
 
     if (channels < getMinChannelCount() ||
         channels > getMaxChannelCount()) {
-        std::cerr << "SongPartitioner::initialise: Unsupported channel count: "
+        std::cerr << "Segmentino::initialise: Unsupported channel count: "
                   << channels << std::endl;
         return false;
     }
 
     if (stepSize != getPreferredStepSize()) {
-        std::cerr << "ERROR: SongPartitioner::initialise: Unsupported step size for this sample rate: "
+        std::cerr << "ERROR: Segmentino::initialise: Unsupported step size for this sample rate: "
                   << stepSize << " (wanted " << (getPreferredStepSize()) << ")" << std::endl;
         return false;
     }
 
     if (blockSize != getPreferredBlockSize()) {
-        std::cerr << "WARNING: SongPartitioner::initialise: Sub-optimal block size for this sample rate: "
+        std::cerr << "WARNING: Segmentino::initialise: Sub-optimal block size for this sample rate: "
                   << blockSize << " (wanted " << getPreferredBlockSize() << ")" << std::endl;
     }
 
@@ -519,14 +522,14 @@ bool SongPartitioner::initialise(size_t channels, size_t stepSize, size_t blockS
     return true;
 }
 
-void SongPartitioner::reset()
+void Segmentino::reset()
 {
     if (m_d) m_d->reset();
     if (m_chromadata) m_chromadata->reset();
     m_pluginFrameCount = 0;
 }
 
-SongPartitioner::OutputList SongPartitioner::getOutputDescriptors() const
+Segmentino::OutputList Segmentino::getOutputDescriptors() const
 {
     OutputList list;
     int outputCounter = 0;
@@ -692,11 +695,11 @@ SongPartitioner::OutputList SongPartitioner::getOutputDescriptors() const
 // make a temporary copy
 
 // We only support a single input channel
-SongPartitioner::FeatureSet SongPartitioner::process(const float *const *inputBuffers,Vamp::RealTime timestamp)
+Segmentino::FeatureSet Segmentino::process(const float *const *inputBuffers,Vamp::RealTime timestamp)
 {
     if (!m_d) {
-        cerr << "ERROR: SongPartitioner::process: "
-             << "SongPartitioner has not been initialised"
+        cerr << "ERROR: Segmentino::process: "
+             << "Segmentino has not been initialised"
              << endl;
         return FeatureSet();
     }
@@ -757,11 +760,11 @@ SongPartitioner::FeatureSet SongPartitioner::process(const float *const *inputBu
     return fs;
 }
 
-SongPartitioner::FeatureSet SongPartitioner::getRemainingFeatures()
+Segmentino::FeatureSet Segmentino::getRemainingFeatures()
 {
     if (!m_d) {
-        cerr << "ERROR: SongPartitioner::getRemainingFeatures: "
-             << "SongPartitioner has not been initialised"
+        cerr << "ERROR: Segmentino::getRemainingFeatures: "
+             << "Segmentino has not been initialised"
              << endl;
         return FeatureSet();
     }
@@ -799,7 +802,7 @@ SongPartitioner::FeatureSet SongPartitioner::getRemainingFeatures()
     try {
         masterFeatureset[m_segmOutputNumber] = runSegmenter(quantisedChroma[1]);
     } catch (std::bad_alloc &a) {
-        cerr << "ERROR: SongPartitioner::getRemainingFeatures: Failed to run segmenter, not enough memory (song too long?)" << endl;
+        cerr << "ERROR: Segmentino::getRemainingFeatures: Failed to run segmenter, not enough memory (song too long?)" << endl;
     }
     
     return(masterFeatureset);
@@ -807,7 +810,7 @@ SongPartitioner::FeatureSet SongPartitioner::getRemainingFeatures()
 
 /* ------ Beat Tracker ------ */
 
-SongPartitioner::FeatureSet SongPartitioner::beatTrack()
+Segmentino::FeatureSet Segmentino::beatTrack()
 {
     vector<double> df;
     vector<double> beatPeriod;
@@ -904,7 +907,7 @@ SongPartitioner::FeatureSet SongPartitioner::beatTrack()
 
 /* ------ Chroma Extractor ------ */
 
-SongPartitioner::FeatureList SongPartitioner::chromaFeatures()
+Segmentino::FeatureList Segmentino::chromaFeatures()
 {
         
     FeatureList returnFeatureList;
@@ -1105,7 +1108,7 @@ SongPartitioner::FeatureList SongPartitioner::chromaFeatures()
 /* ------ Beat Quantizer ------ */
 
 std::vector<Vamp::Plugin::FeatureList>
-SongPartitioner::beatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugin::FeatureList beats)
+Segmentino::beatQuantiser(Vamp::Plugin::FeatureList chromagram, Vamp::Plugin::FeatureList beats)
 {
     std::vector<FeatureList> returnVector;
     
@@ -1830,7 +1833,7 @@ vector<Part> songSegmentIntegration(vector<Part> &parts)
 }
 
 // Segmenter
-Vamp::Plugin::FeatureList SongPartitioner::runSegmenter(Vamp::Plugin::FeatureList quantisedChromagram)
+Vamp::Plugin::FeatureList Segmentino::runSegmenter(Vamp::Plugin::FeatureList quantisedChromagram)
 {
     /* --- Display Information --- */
 //    int numBeat = quantisedChromagram.size();

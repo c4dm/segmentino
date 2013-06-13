@@ -1,6 +1,6 @@
 
 PLUGIN_EXT	?= .so
-PLUGIN	?= songpartitioner$(PLUGIN_EXT)
+PLUGIN	?= segmentino$(PLUGIN_EXT)
 CXX	?= g++
 CC	?= gcc
 
@@ -8,9 +8,9 @@ CFLAGS	:= $(CFLAGS) -I. -I../../qm-dsp -I../../nnls-chroma
 CXXFLAGS	:= $(CXXFLAGS) -I. -I../../qm-dsp -I../../nnls-chroma
 LDFLAGS		:= -L../../qm-dsp  $(LDFLAGS)
 
-HEADERS := SongParts.h
+HEADERS := Segmentino.h
 
-SOURCES := SongParts.cpp \
+SOURCES := Segmentino.cpp \
            libmain.cpp \
 	   g2cstubs.c \
            ../../nnls-chroma/chromamethods.cpp \

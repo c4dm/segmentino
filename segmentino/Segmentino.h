@@ -1,9 +1,12 @@
 /* -*- c-basic-offset: 4 indent-tabs-mode: nil -*-  vi:set ts=8 sts=4 sw=4: */
 
 /*
-    QM Vamp Plugin Set
+    Segmentino
 
-    Centre for Digital Music, Queen Mary, University of London.
+    Code by Massimiliano Zanoni and Matthias Mauch
+    Centre for Digital Music, Queen Mary, University of London
+
+    Copyright 2009-2013 Queen Mary, University of London.
 
     This program is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -12,8 +15,8 @@
     COPYING included with this distribution for more information.
 */
 
-#ifndef _SONG_PARTS_PLUGIN_H_
-#define _SONG_PARTS_PLUGIN_H_
+#ifndef _SEGMENTINO_PLUGIN_H_
+#define _SEGMENTINO_PLUGIN_H_
 
 #include <vamp-sdk/Plugin.h>
 
@@ -21,11 +24,11 @@ class BeatTrackerData;
 
 class ChromaData;
 
-class SongPartitioner : public Vamp::Plugin
+class Segmentino : public Vamp::Plugin
 {
 public:
-    SongPartitioner(float inputSampleRate);
-    virtual ~SongPartitioner();
+    Segmentino(float inputSampleRate);
+    virtual ~Segmentino();
 
     bool initialise(size_t channels, size_t stepSize, size_t blockSize);
     void reset();
