@@ -674,6 +674,8 @@ Segmentino::FeatureSet Segmentino::getRemainingFeatures()
     if (beatcount == 0) return Segmentino::FeatureSet();
     Vamp::RealTime last_beattime = internalFeatureset[m_beatOutputNumber][beatcount-1].timestamp;
 
+    // // THIS FOLLOWING BIT IS WEIRD! REPLACES BEAT-TRACKED BEATS WITH 
+    // // UNIFORM 0.5 SEC BEATS
     // internalFeatureset[m_beatOutputNumber].clear();
     // Vamp::RealTime beattime = Vamp::RealTime::fromSeconds(1.0);
     // while (beattime < last_beattime)
