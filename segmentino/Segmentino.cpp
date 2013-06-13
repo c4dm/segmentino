@@ -653,8 +653,6 @@ Segmentino::FeatureSet Segmentino::process(const float *const *inputBuffers,Vamp
     m_pluginFrameCount++;
     
     FeatureSet fs;
-    fs[m_logscalespecOutputNumber].push_back(
-        m_chromadata->logSpectrum.back());
     return fs;
 }
 
