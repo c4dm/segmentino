@@ -4,8 +4,9 @@ PLUGIN	?= segmentino$(PLUGIN_EXT)
 CXX	?= g++
 CC	?= gcc
 
-CFLAGS		:= $(CFLAGS) -I. -Ivamp-plugin-sdk -Iqm-dsp -Iarmadillo-3.900.4/include
-CXXFLAGS	:= $(CXXFLAGS) $(CFLAGS)
+INCLUDEFLAGS	:= -I. -Ivamp-plugin-sdk -Iqm-dsp -Iarmadillo-3.900.4/include
+CFLAGS		:= $(CFLAGS) $(INCLUDEFLAGS)
+CXXFLAGS	:= $(CXXFLAGS) $(INCLUDEFLAGS)
 LDFLAGS		:= $(LDFLAGS)
 
 HEADERS := segmentino/Segmentino.h
