@@ -466,10 +466,9 @@ size_t Segmentino::getPreferredStepSize() const
 // Return the BlockSize for Chroma Extractor 
 size_t Segmentino::getPreferredBlockSize() const
 {
-    size_t theoretical = getPreferredStepSize() * 2;
+    int theoretical = getPreferredStepSize() * 2;
     theoretical *= m_chromaFramesizeFactor; 
-
-    return theoretical;
+    return MathUtilities::nextPowerOfTwo(theoretical);
 }
 
 
@@ -944,7 +943,7 @@ Segmentino::FeatureList Segmentino::chromaFeatures()
         calculate a tuned log-frequency spectrogram (f2): use the tuning estimated above (kinda f0) to 
         perform linear interpolation on the existing log-frequency spectrogram (kinda f1).
     **/
-    cerr << endl << "[NNLS Chroma Plugin] Tuning Log-Frequency Spectrogram ... ";
+//    cerr << endl << "[NNLS Chroma Plugin] Tuning Log-Frequency Spectrogram ... ";
              
     float tempValue = 0;
 
@@ -1005,7 +1004,7 @@ Segmentino::FeatureList Segmentino::chromaFeatures()
         tunedlogfreqspec.push_back(f2);
         count++;
     }
-    cerr << "done." << endl;    
+//    cerr << "done." << endl;    
     /** Semitone spectrum and chromagrams
         Semitone-spaced log-frequency spectrum derived 
         from the tuned log-freq spectrum above. the spectrum
@@ -1013,12 +1012,13 @@ Segmentino::FeatureList Segmentino::chromaFeatures()
         Three different kinds of chromagram are calculated, "treble", "bass", and "both" (which means 
         bass and treble stacked onto each other).
     **/
+/*
     if (m_chromadata->useNNLS == 0) {
         cerr << "[NNLS Chroma Plugin] Mapping to semitone spectrum and chroma ... ";
     } else {
         cerr << "[NNLS Chroma Plugin] Performing NNLS and mapping to chroma ... ";
     }
-    
+*/    
     vector<float> oldchroma = vector<float>(12,0);
     vector<float> oldbasschroma = vector<float>(12,0);
     count = 0;
@@ -1106,7 +1106,7 @@ Segmentino::FeatureList Segmentino::chromaFeatures()
         returnFeatureList.push_back(bothchroma);
         count++;
     }
-    cerr << "done." << endl;
+//    cerr << "done." << endl;
 
     return returnFeatureList;     
 }
