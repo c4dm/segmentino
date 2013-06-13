@@ -23,6 +23,9 @@ SOURCES := segmentino/Segmentino.cpp \
 	   qm-dsp/dsp/tempotracking/TempoTrackV2.cpp \
 	   qm-dsp/dsp/tempotracking/DownBeat.cpp \
 	   qm-dsp/dsp/phasevocoder/PhaseVocoder.cpp \
+           qm-dsp/dsp/signalconditioning/DFProcess.cpp \
+           qm-dsp/dsp/signalconditioning/FiltFilt.cpp \
+           qm-dsp/dsp/signalconditioning/Filter.cpp \
 	   qm-dsp/maths/MathUtilities.cpp
 
 OBJECTS := $(SOURCES:.cpp=.o)

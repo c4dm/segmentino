@@ -547,7 +547,7 @@ Segmentino::OutputList Segmentino::getOutputDescriptors() const
     beat.sampleType = OutputDescriptor::VariableSampleRate;
     beat.sampleRate = 1.0 / m_stepSecs;
     m_beatOutputNumber = outputCounter++;
-
+    
     OutputDescriptor bars;
     bars.identifier = "bars";
     bars.name = "Bars";
@@ -558,7 +558,7 @@ Segmentino::OutputList Segmentino::getOutputDescriptors() const
     bars.sampleType = OutputDescriptor::VariableSampleRate;
     bars.sampleRate = 1.0 / m_stepSecs;
     m_barsOutputNumber = outputCounter++;
-
+    
     OutputDescriptor beatcounts;
     beatcounts.identifier = "beatcounts";
     beatcounts.name = "Beat Count";
@@ -569,7 +569,7 @@ Segmentino::OutputList Segmentino::getOutputDescriptors() const
     beatcounts.sampleType = OutputDescriptor::VariableSampleRate;
     beatcounts.sampleRate = 1.0 / m_stepSecs;
     m_beatcountsOutputNumber = outputCounter++;
-
+    
     OutputDescriptor beatsd;
     beatsd.identifier = "beatsd";
     beatsd.name = "Beat Spectral Difference";
