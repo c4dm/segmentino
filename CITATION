@@ -1,0 +1,18 @@
+
+@inproceedings{matthias2009a,
+  author = {Matthias Mauch and Katy C. Noland and Dixon, Simon},
+  title = {Using Musical Structure to Enhance Automatic Chord Transcription},
+  booktitle = {Proceedings of the 10th International Conference on Music Information Retrieval (ISMIR 2009)},
+  note = {First description of the algorithm. However, the description is not complete. Better description in "Automatic chord transcription from audio using computational models of musical context" (Mauch's PhD Thesis), Chapter 6.},
+  pages = {231-236},
+  year = {2009}
+}
+
+@phdthesis{matthias2010a,
+  author = {Matthias Mauch},
+  title = {Automatic Chord Transcription from Audio Using Computational Models of Musical Context},
+  note = {Features a more thorough description of the segmentation algorithm in Chapter 6.},
+  school = {Queen Mary, University of London},
+  year = {2010}
+} 
+
