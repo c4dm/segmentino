@@ -63,11 +63,6 @@ using std::cerr;
 using std::cout;
 using std::endl;
 
-#ifndef __GNUC__
-#include <alloca.h>
-#endif
-
-
 // Result Struct
 typedef struct Part {
     int n;
@@ -604,17 +599,17 @@ Segmentino::FeatureSet Segmentino::process(const float *const *inputBuffers,
     }
 
     const int fl = m_d->dfConfig.frameLength;
-#ifndef __GNUC__
-    double *dfinput = (double *)alloca(fl * sizeof(double));
-#else
-    double dfinput[fl];
-#endif
+
     int sampleOffset = ((m_chromaFramesizeFactor-1) * fl) / 2;
     
+    double *dfinput = new double[fl];
+
     // Since chroma needs a much longer frame size, we only ever use the very
     // beginning of the frame for beat tracking.
     for (int i = 0; i < fl; ++i) dfinput[i] = inputBuffers[0][i];
     double output = m_d->df->processTimeDomain(dfinput);
+
+    delete[] dfinput;
 
     if (m_d->dfOutput.empty()) m_d->origin = timestamp;
 
@@ -638,19 +633,19 @@ Segmentino::FeatureSet Segmentino::process(const float *const *inputBuffers,
         
         // Window the full time domain, data, FFT it and process chroma stuff.
     
-        #ifndef __GNUC__
-            float *windowedBuffers = (float *)alloca(m_chromadata->blockSize * sizeof(float));
-        #else
-            float windowedBuffers[m_chromadata->blockSize];
-        #endif
+        float *windowedBuffers = new float[m_chromadata->blockSize];
+
         m_chromadata->window.cut(&inputBuffers[0][0], &windowedBuffers[0]);
     
         // adjust timestamp (we want the middle of the frame)
-        timestamp = timestamp + Vamp::RealTime::frame2RealTime(sampleOffset, lrintf(m_inputSampleRate));
+        timestamp = timestamp + 
+            Vamp::RealTime::frame2RealTime(sampleOffset, lrintf(m_inputSampleRate));
 
         m_chromadata->baseProcess(&windowedBuffers[0], timestamp);
-        
+
+        delete[] windowedBuffers;
     }
+
     m_pluginFrameCount++;
     
     FeatureSet fs;
