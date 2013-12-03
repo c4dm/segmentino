@@ -4,7 +4,8 @@ PLUGIN	?= segmentino$(PLUGIN_EXT)
 CXX	?= g++
 CC	?= gcc
 
-INCLUDEFLAGS	:= -I. -Ivamp-plugin-sdk -Iqm-dsp -Iarmadillo-3.900.4/include
+INCLUDEFLAGS	:= -I. -Ivamp-plugin-sdk -Iqm-dsp -Iqm-dsp/ext/kissfft -Iqm-dsp/ext/kissfft/tools -Dkiss_fft_scalar=double -Iarmadillo-3.900.4/include
+
 CFLAGS		:= $(CFLAGS) $(INCLUDEFLAGS)
 CXXFLAGS	:= $(CXXFLAGS) $(INCLUDEFLAGS)
 LDFLAGS		:= $(LDFLAGS)
@@ -27,7 +28,9 @@ SOURCES := segmentino/Segmentino.cpp \
            qm-dsp/dsp/signalconditioning/DFProcess.cpp \
            qm-dsp/dsp/signalconditioning/FiltFilt.cpp \
            qm-dsp/dsp/signalconditioning/Filter.cpp \
-	   qm-dsp/maths/MathUtilities.cpp
+	   qm-dsp/maths/MathUtilities.cpp \
+           qm-dsp/ext/kissfft/kiss_fft.c \
+           qm-dsp/ext/kissfft/tools/kiss_fftr.c
 
 OBJECTS := $(SOURCES:.cpp=.o)
 OBJECTS := $(OBJECTS:.c=.o)

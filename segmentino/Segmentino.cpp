@@ -8,10 +8,10 @@
 
     Copyright 2009-2013 Queen Mary, University of London.
 
-    This program is free software; you can redistribute it and/or
-    modify it under the terms of the GNU General Public License as
-    published by the Free Software Foundation; either version 2 of the
-    License, or (at your option) any later version.  See the file
+    This program is free software: you can redistribute it and/or
+    modify it under the terms of the GNU Affero General Public License
+    as published by the Free Software Foundation, either version 3 of
+    the License, or (at your option) any later version. See the file
     COPYING included with this distribution for more information.
 */
 
@@ -228,7 +228,7 @@ public:
         double *inputBuffersDouble = new double[blockSize];
         for (int i = 0; i < blockSize; i++) inputBuffersDouble[i] = inputBuffers[i];
         
-        fft.process(false, inputBuffersDouble, fftReal, fftImag);
+        fft.forward(inputBuffersDouble, fftReal, fftImag);
         
         float energysum = 0;
         // make magnitude
@@ -434,7 +434,7 @@ int Segmentino::getPluginVersion() const
 
 string Segmentino::getCopyright() const
 {
-    return "Plugin by Matthew Davies, Christian Landone, Chris Cannam, Matthias Mauch and Massimiliano Zanoni  Copyright (c) 2006-2012 QMUL - All Rights Reserved";
+    return "Plugin by Matthew Davies, Christian Landone, Chris Cannam, Matthias Mauch and Massimiliano Zanoni  Copyright (c) 2006-2013 QMUL - Affero GPL";
 }
 
 Segmentino::ParameterList Segmentino::getParameterDescriptors() const
@@ -593,7 +593,8 @@ Segmentino::OutputList Segmentino::getOutputDescriptors() const
 // make a temporary copy
 
 // We only support a single input channel
-Segmentino::FeatureSet Segmentino::process(const float *const *inputBuffers,Vamp::RealTime timestamp)
+Segmentino::FeatureSet Segmentino::process(const float *const *inputBuffers,
+                                           Vamp::RealTime timestamp)
 {
     if (!m_d) {
         cerr << "ERROR: Segmentino::process: "
@@ -613,7 +614,7 @@ Segmentino::FeatureSet Segmentino::process(const float *const *inputBuffers,Vamp
     // Since chroma needs a much longer frame size, we only ever use the very
     // beginning of the frame for beat tracking.
     for (int i = 0; i < fl; ++i) dfinput[i] = inputBuffers[0][i];
-    double output = m_d->df->process(dfinput);
+    double output = m_d->df->processTimeDomain(dfinput);
 
     if (m_d->dfOutput.empty()) m_d->origin = timestamp;
 
