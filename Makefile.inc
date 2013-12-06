@@ -39,7 +39,7 @@ $(PLUGIN):	$(OBJECTS)
 		$(CXX) -o $@ $^ $(LDFLAGS)
 
 clean:		
-		rm $(OBJECTS)
+		rm -f $(OBJECTS)
 
 distclean:	clean
-		rm $(PLUGIN)
+		rm -f $(PLUGIN)

@@ -1,8 +1,8 @@
 
-CFLAGS := -O3 -ftree-vectorize -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.7.sdk -arch i386 -arch x86_64 -I/Developer/SDKs/MacOSX10.7.sdk/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/Headers/ -Ivamp-plugin-sdk -Iqm-dsp -I../boost_1_48_0
+CFLAGS := -O3 -ftree-vectorize -mmacosx-version-min=10.7 -arch i386 -arch x86_64 -Ivamp-plugin-sdk -Iqm-dsp -I/usr/local/boost
 CXXFLAGS  := $(CFLAGS)
 
-LDFLAGS	  := -isysroot /Developer/SDKs/MacOSX10.7.sdk -L/usr/lib/ -arch i386 -arch x86_64 -dynamiclib -install_name qm-vamp-plugins.dylib
+LDFLAGS	  := -mmacosx-version-min=10.7 -arch i386 -arch x86_64 -dynamiclib -exported_symbols_list segmentino/vamp-plugin.list
 
 PLUGIN_EXT   := .dylib
 
