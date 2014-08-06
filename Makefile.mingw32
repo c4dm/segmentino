@@ -1,10 +1,14 @@
 
-CXX	:= i486-mingw32-g++
-CC	:= i486-mingw32-gcc
+TOOLPREFIX     ?= i586-mingw32msvc-
+CXX		= $(TOOLPREFIX)g++
+CC		= $(TOOLPREFIX)gcc
+LD		= $(TOOLPREFIX)g++
+AR		= $(TOOLPREFIX)ar
+RANLIB		= $(TOOLPREFIX)ranlib
 
-CFLAGS    := -Wall -O2
-CXXFLAGS  := $(CFLAGS) -Iboost_1_53_0
-LDFLAGS	  := -shared -Wl,-Bsymbolic -static-libgcc -Wl,--version-script=segmentino/vamp-plugin.map -fno-exceptions $(shell $(CXX) -print-file-name=libstdc++.a)
+CFLAGS    += -Wall -O2
+CXXFLAGS  += $(CFLAGS) -Iboost_1_53_0
+LDFLAGS	  += -shared -static -Wl,-Bsymbolic -static-libgcc -Wl,--retain-symbols-file=segmentino/vamp-plugin.list -fno-exceptions $(shell $(CXX) -print-file-name=libstdc++.a)
 
 PLUGIN_EXT   := .dll
 
