@@ -1,11 +1,11 @@
 
-CFLAGS := -O3 -fPIC -ftree-vectorize
+CFLAGS += -O3 -fPIC -ftree-vectorize
 
 #CFLAGS := -Wall -g -fPIC 
 
-CXXFLAGS  := $(CFLAGS)
+CXXFLAGS  += $(CFLAGS)
 
-LDFLAGS	  := -shared -Wl,-Bsymbolic -Wl,--version-script=segmentino/vamp-plugin.map
+LDFLAGS	  += -shared -Wl,-Bsymbolic -Wl,--version-script=segmentino/vamp-plugin.map
 
 PLUGIN_EXT   := .so
 
