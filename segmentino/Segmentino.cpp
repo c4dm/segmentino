@@ -335,7 +335,6 @@ public:
             localTunings.push_back(0);
         }
         
-        blockSize = blockSize;
         frameCount = 0;
         int tempn = nNote * blockSize/2;
         // cerr << "length of tempkernel : " <<  tempn << endl;
