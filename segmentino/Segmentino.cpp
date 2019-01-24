@@ -1218,6 +1218,19 @@ Part nullpart(vector<Part> parts, vec barline)
 // Merge Nulls
 void mergenulls(vector<Part> &parts)
 {
+/*
+    cerr << "Segmentino: mergenulls: before: "<< endl;
+    for (int iPart=0; iPart<(int)parts.size(); ++iPart) {
+        cerr << parts[iPart].letter << ": ";
+        for (int iIndex=0; iIndex<(int)parts[iPart].indices.size(); ++iIndex) {
+            cerr << parts[iPart].indices[iIndex];
+            if (iIndex+1 < (int)parts[iPart].indices.size()) {
+                cerr << ", ";
+            }
+        }
+        cerr << endl;
+    }
+*/
     for (int iPart=0; iPart<(int)parts.size(); ++iPart)
     {
         
@@ -1258,12 +1271,27 @@ void mergenulls(vector<Part> &parts)
                     newVectorPart[newpartind].n = newVectorPart[newpartind].n+1;
                 }
             }
-            parts.erase (parts.end());
+            parts.erase (parts.begin() + iPart);
             
             for (int i=0; i<(int)newVectorPart.size(); ++i)
                 parts.push_back(newVectorPart[i]);
+
+            break;
         }
     }
+/*
+    cerr << "Segmentino: mergenulls: after: "<< endl;
+    for (int iPart=0; iPart<(int)parts.size(); ++iPart) {
+        cerr << parts[iPart].letter << ": ";
+        for (int iIndex=0; iIndex<(int)parts[iPart].indices.size(); ++iIndex) {
+            cerr << parts[iPart].indices[iIndex];
+            if (iIndex+1 < (int)parts[iPart].indices.size()) {
+                cerr << ", ";
+            }
+        }
+        cerr << endl;
+    }
+*/
 }
 
 /* ------ Segmentation ------ */
