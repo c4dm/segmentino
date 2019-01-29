@@ -1,0 +1,13 @@
+{
+  "libraries": {
+    "vamp-plugin-sdk": {
+      "pin": "da86fb0bccb3"
+    },
+    "qm-dsp": {
+      "pin": "852c5ba16bb0"
+    },
+    "nnls-chroma": {
+      "pin": "6bfce96d87b4"
+    }
+  }
+}

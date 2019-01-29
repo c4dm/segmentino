@@ -35,11 +35,16 @@ SOURCES := segmentino/Segmentino.cpp \
 OBJECTS := $(SOURCES:.cpp=.o)
 OBJECTS := $(OBJECTS:.c=.o)
 
+all:		.repoint.point $(PLUGIN)
+
 $(PLUGIN):	$(OBJECTS)
 		$(CXX) -o $@ $^ $(LDFLAGS)
 
+.repoint.point: repoint-project.json repoint-lock.json
+		./repoint install
+
 clean:		
-		rm -f $(OBJECTS)
+		rm -f $(OBJECTS) .repoint.point
 
 distclean:	clean
 		rm -f $(PLUGIN)
