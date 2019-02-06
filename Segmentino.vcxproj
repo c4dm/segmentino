@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{6EEF8404-062C-4C94-B406-3D390FB27F51}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>segmentino</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>segmentino</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetName>segmentino</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetName>segmentino</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USE_MATH_DEFINES;kiss_fft_scalar=double;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>C:\Users\Chris\Documents\segmenter-vamp-plugin\qm-dsp\ext\kissfft\tools;C:\Users\Chris\Documents\segmenter-vamp-plugin\qm-dsp\ext\kissfft;C:\Users\Chris\Documents\boost_1_69_0;C:\Users\Chris\Documents\segmenter-vamp-plugin\armadillo-3.900.4\include;C:\Users\Chris\Documents\segmenter-vamp-plugin\qm-dsp;C:\Users\Chris\Documents\segmenter-vamp-plugin;C:\Users\Chris\Documents\segmenter-vamp-plugin\vamp-plugin-sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalOptions>/EXPORT:vampGetPluginDescriptor %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USE_MATH_DEFINES;kiss_fft_scalar=double;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>C:\Users\Chris\Documents\segmenter-vamp-plugin\qm-dsp\ext\kissfft\tools;C:\Users\Chris\Documents\segmenter-vamp-plugin\qm-dsp\ext\kissfft;C:\Users\Chris\Documents\boost_1_69_0;C:\Users\Chris\Documents\segmenter-vamp-plugin\armadillo-3.900.4\include;C:\Users\Chris\Documents\segmenter-vamp-plugin\qm-dsp;C:\Users\Chris\Documents\segmenter-vamp-plugin;C:\Users\Chris\Documents\segmenter-vamp-plugin\vamp-plugin-sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <TargetMachine>MachineX86</TargetMachine>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalOptions>/EXPORT:vampGetPluginDescriptor %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Link>
+      <AdditionalOptions>/EXPORT:vampGetPluginDescriptor %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Chris\Documents\segmenter-vamp-plugin\qm-dsp\ext\kissfft\tools;C:\Users\Chris\Documents\segmenter-vamp-plugin\qm-dsp\ext\kissfft;C:\Users\Chris\Documents\boost_1_69_0;C:\Users\Chris\Documents\segmenter-vamp-plugin\armadillo-3.900.4\include;C:\Users\Chris\Documents\segmenter-vamp-plugin\qm-dsp;C:\Users\Chris\Documents\segmenter-vamp-plugin;C:\Users\Chris\Documents\segmenter-vamp-plugin\vamp-plugin-sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WINDLL;_USE_MATH_DEFINES;kiss_fft_scalar=double;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Link>
+      <AdditionalOptions>/EXPORT:vampGetPluginDescriptor %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\Users\Chris\Documents\segmenter-vamp-plugin\qm-dsp\ext\kissfft\tools;C:\Users\Chris\Documents\segmenter-vamp-plugin\qm-dsp\ext\kissfft;C:\Users\Chris\Documents\boost_1_69_0;C:\Users\Chris\Documents\segmenter-vamp-plugin\armadillo-3.900.4\include;C:\Users\Chris\Documents\segmenter-vamp-plugin\qm-dsp;C:\Users\Chris\Documents\segmenter-vamp-plugin;C:\Users\Chris\Documents\segmenter-vamp-plugin\vamp-plugin-sdk;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WINDLL;_USE_MATH_DEFINES;kiss_fft_scalar=double;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="nnls-chroma\Chordino.cpp" />
+    <ClCompile Include="nnls-chroma\chromamethods.cpp" />
+    <ClCompile Include="nnls-chroma\nnls.c" />
+    <ClCompile Include="nnls-chroma\NNLSBase.cpp" />
+    <ClCompile Include="nnls-chroma\NNLSChroma.cpp" />
+    <ClCompile Include="nnls-chroma\Tuning.cpp" />
+    <ClCompile Include="nnls-chroma\viterbi.cpp" />
+    <ClCompile Include="qm-dsp\dsp\onsets\DetectionFunction.cpp" />
+    <ClCompile Include="qm-dsp\dsp\onsets\PeakPicking.cpp" />
+    <ClCompile Include="qm-dsp\dsp\phasevocoder\PhaseVocoder.cpp" />
+    <ClCompile Include="qm-dsp\dsp\rateconversion\Decimator.cpp" />
+    <ClCompile Include="qm-dsp\dsp\signalconditioning\DFProcess.cpp" />
+    <ClCompile Include="qm-dsp\dsp\signalconditioning\Filter.cpp" />
+    <ClCompile Include="qm-dsp\dsp\signalconditioning\FiltFilt.cpp" />
+    <ClCompile Include="qm-dsp\dsp\signalconditioning\Framer.cpp" />
+    <ClCompile Include="qm-dsp\dsp\tempotracking\DownBeat.cpp" />
+    <ClCompile Include="qm-dsp\dsp\tempotracking\TempoTrack.cpp" />
+    <ClCompile Include="qm-dsp\dsp\tempotracking\TempoTrackV2.cpp" />
+    <ClCompile Include="qm-dsp\dsp\transforms\FFT.cpp" />
+    <ClCompile Include="qm-dsp\ext\kissfft\kiss_fft.c" />
+    <ClCompile Include="qm-dsp\ext\kissfft\tools\kiss_fftr.c" />
+    <ClCompile Include="qm-dsp\maths\Correlation.cpp" />
+    <ClCompile Include="qm-dsp\maths\MathUtilities.cpp" />
+    <ClCompile Include="segmentino\libmain.cpp" />
+    <ClCompile Include="segmentino\Segmentino.cpp" />
+    <ClCompile Include="vamp-plugin-sdk\src\vamp-sdk\PluginAdapter.cpp" />
+    <ClCompile Include="vamp-plugin-sdk\src\vamp-sdk\RealTime.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Makefile.inc" />
+    <None Include="nnls-chroma\Makefile.inc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="nnls-chroma\Chordino.h" />
+    <ClInclude Include="nnls-chroma\chromamethods.h" />
+    <ClInclude Include="nnls-chroma\nnls.h" />
+    <ClInclude Include="nnls-chroma\NNLSBase.h" />
+    <ClInclude Include="nnls-chroma\NNLSChroma.h" />
+    <ClInclude Include="nnls-chroma\Tuning.h" />
+    <ClInclude Include="nnls-chroma\viterbi.h" />
+    <ClInclude Include="segmentino\Segmentino.h" />
+    <ClInclude Include="vamp-plugin-sdk\vamp-sdk\FFT.h" />
+    <ClInclude Include="vamp-plugin-sdk\vamp-sdk\plugguard.h" />
+    <ClInclude Include="vamp-plugin-sdk\vamp-sdk\Plugin.h" />
+    <ClInclude Include="vamp-plugin-sdk\vamp-sdk\PluginAdapter.h" />
+    <ClInclude Include="vamp-plugin-sdk\vamp-sdk\PluginBase.h" />
+    <ClInclude Include="vamp-plugin-sdk\vamp-sdk\RealTime.h" />
+    <ClInclude Include="vamp-plugin-sdk\vamp-sdk\vamp-sdk.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -5,3 +5,9 @@ syntax: glob
 *.dll
 *.dylib
 glob:.repoint*
+x64
+Release
+Debug
+.vs
+*.vcxproj.filters
+*.vcxproj.user
