@@ -423,12 +423,12 @@ string Segmentino::getMaker() const
 
 int Segmentino::getPluginVersion() const
 {
-    return 2;
+    return 3;
 }
 
 string Segmentino::getCopyright() const
 {
-    return "Plugin by Matthew Davies, Christian Landone, Chris Cannam, Matthias Mauch and Massimiliano Zanoni  Copyright (c) 2006-2013 QMUL - Affero GPL";
+    return "Plugin by Matthew Davies, Christian Landone, Chris Cannam, Matthias Mauch and Massimiliano Zanoni  Copyright (c) 2006-2019 QMUL - Affero GPL";
 }
 
 Segmentino::ParameterList Segmentino::getParameterDescriptors() const
