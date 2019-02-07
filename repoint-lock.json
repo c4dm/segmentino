@@ -1,7 +1,7 @@
 {
   "libraries": {
     "vamp-plugin-sdk": {
-      "pin": "da86fb0bccb3"
+      "pin": "b650289c47b4"
     },
     "qm-dsp": {
       "pin": "852c5ba16bb0"
